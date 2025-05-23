@@ -1,0 +1,4 @@
+
+kkt_equilibrium_model.mod, line 34 (offset 1317):
+	syntax error
+context:   >>> <! <<< -- # Profit Objective per farm

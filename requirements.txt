@@ -1,11 +1,1 @@
---index-url https://pypi.ampl.com
---extra-index-url https://pypi.org/simple
-ampl_module_base
-ampl_module_copt
-ampl_module_knitro
 amplpy>=0.14.0
-pandas==1.5.3
-numpy==1.26.2
-streamlit==1.37.0
-matplotlib==3.7.1
-seaborn==0.13.2

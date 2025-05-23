@@ -1,8 +1,7 @@
 import streamlit as st
 import numpy as np
 import pandas as pd
-import subprocess
-import re
+import amplpy
 from generate_dat import write_dat_file
 from results_parser import parse_results
 from amplpy import AMPL

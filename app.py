@@ -5,10 +5,8 @@ import subprocess
 import re
 from generate_dat import write_dat_file
 from results_parser import parse_results
-from amplpy import AMPL, ampl_notebook
-ampl = ampl_notebook(
-    modules=["highs", "cbc", "gurobi", "cplex"], # pick from over 20 modules including most commercial and open-source solvers
-    license_uuid="ff5a1db3-7734-46a7-b5ec-fdd82ba92ec0")
+from amplpy import AMPL
+ampl = AMPL()
 
 st.title("Water Credit Market Simulator")
 

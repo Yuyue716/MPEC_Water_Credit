@@ -3,32 +3,32 @@ set I := F1 F2 F3 F4 F5;
 set J := F1 F2 F3 F4 F5;
 
 param k := 0.1;
-param min_prod_factor := 10;
-param D := 5512;
+param min_prod_factor := 2;
+param D := 826;
 param R := 7347.45;
 param C := 6967.85;
 
 param Cap :=
-  F1 2346.5
-  F2 2888.0
-  F3 1444.0
-  F4 1805.0
-  F5 2707.5
+  F1 17689.0
+  F2 17689.0
+  F3 17689.0
+  F4 17689.0
+  F5 16967.0
 ;
 
 param E :=
-  F1 10.42
-  F2 10.5
-  F3 9.97
-  F4 7.96
-  F5 10.47
+  F1 23.26
+  F2 19.77
+  F3 18.54
+  F4 16.73
+  F5 18.04
 ;
 
 param Size :=
-  F1 13
-  F2 16
-  F3 8
-  F4 10
-  F5 15
+  F1 98
+  F2 98
+  F3 98
+  F4 98
+  F5 94
 ;
 

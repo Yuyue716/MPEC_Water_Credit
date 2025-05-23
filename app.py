@@ -5,6 +5,10 @@ import subprocess
 import re
 from generate_dat import write_dat_file
 from results_parser import parse_results
+from amplpy import AMPL, ampl_notebook
+ampl = ampl_notebook(
+    modules=["highs", "cbc", "gurobi", "cplex"], # pick from over 20 modules including most commercial and open-source solvers
+    license_uuid="ff5a1db3-7734-46a7-b5ec-fdd82ba92ec0")
 
 st.title("Water Credit Market Simulator")
 
@@ -14,13 +18,13 @@ min_prod = st.slider("Minimum production factor", 1, 20, 10)
 tighten = st.slider("Cap tightening rate per year (%)", 0, 20, 5) / 100
 demand_growth = st.slider("Demand growth rate per year (%)", 0, 20, 5) / 100
 years = st.slider("Years to simulate", 1, 10, 5)
-E_mean = st.slider("Average emission rate per unit (E)", 2.0, 25.0, 12.0)
+E_mean = st.slider("Average emission rate per unit (E)", 10.0, 40.0, 30.0)
 E_sd = st.slider("Emission variation (std dev)", 0.0, 10.0, 2.0)
 num_farms = 5 
 cap_per_hectare = st.slider("Cap per hectare (kg N/ha)", 50, 400, 200)
-size_mean = st.slider("Average farm size (hectares)", 5, 50, 15)
+size_mean = st.slider("Average farm size (hectares)", 5, 100, 15)
 size_sd = st.slider("Size variability (std dev)", 0, 20, 5)
-base_demand = st.slider("Base total market demand (D)", min_value=1000, max_value=10000, value=5000, step=10)
+base_demand = st.slider("Base total market demand (D)", min_value=500, max_value=1000, value=750, step=10)
 
 
 # Load historical R and C data
@@ -43,19 +47,32 @@ for t, year in enumerate(available_years):
     D = int(base_demand * ((1 + demand_growth) ** t))
     dat_path = f"data_{year}.dat"
     write_dat_file(k, min_prod, D, R_scalar, C_scalar, Cap, E, Size, dat_path)
+    ampl.reset()  
+    ampl.read("kkt_equilibrium_model.mod")
+    ampl.read_data(dat_path)
+    ampl.set_option("solver", "knitro")
+    ampl.solve()
 
-    with open("ampl_script.run", "w") as f:
-        f.write(f"""model kkt_equilibrium_model.mod;
-    data {dat_path};
-    option solver conopt;
-    solve;
-    option display_1col 1;
-    display PN, theta, x, q;
-    """)
+    # Extract variables directly
+    PN = ampl.get_variable("PN").value()
+    theta = ampl.get_variable("theta").get_values().to_list()
+    q = ampl.get_variable("q").get_values().to_dict()
+    x = ampl.get_variable("x").get_values().to_dict()
+    print(f"\n=== Year {year} ===")
+    print("Production quantities (q):")
+    for farm, val in q.items():
+        print(f"Farm {farm}: {val}")
 
-    subprocess.run(["ampl", "ampl_script.run"], stdout=open("ampl_output.txt", "w"))
+    print("\nCredit trades (x[i,j]):")
+    for (i, j), val in x.items():
+        if abs(val) > 1e-6:
+            print(f"Farm {i} sent {val:.4f} credits to Farm {j}")
 
-    PN, avg_theta, total_trade, avg_q = parse_results("ampl_output.txt")
+    print("\nCredit price (PN):")
+    print(PN)
+    avg_theta = np.mean([v for _, v in theta])
+    total_trade = sum([v for _, v in x.items()])
+    avg_q = np.mean([v for _, v in q.items()])
     PN_series.append(PN)
     theta_series.append(avg_theta)
     trade_series.append(total_trade / len(farm_ids))

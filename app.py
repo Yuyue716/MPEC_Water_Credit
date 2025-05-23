@@ -4,8 +4,12 @@ import pandas as pd
 import amplpy
 from generate_dat import write_dat_file
 from results_parser import parse_results
-from amplpy import AMPL
-ampl = AMPL()
+import os
+from amplpy import AMPL, Environment
+
+ampl = AMPL(Environment())
+ampl.set_option("ampl_license", os.environ["AMPL_LICENSE"])
+
 
 st.title("Water Credit Market Simulator")
 

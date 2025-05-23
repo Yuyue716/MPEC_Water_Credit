@@ -1,37 +1,11 @@
 --index-url https://pypi.ampl.com
 --extra-index-url https://pypi.org/simple
 ampl_module_base
-ampl_module_coin
-ampl_module_highs
-ampl_module_scip
-ampl_module_gcg
-ampl_module_gurobi
-ampl_module_cplex
-ampl_module_xpress
 ampl_module_copt
-ampl_module_mosek
 ampl_module_knitro
-ampl_module_lgo
-ampl_module_minos
-ampl_module_lindoglobal
-ampl_module_octeract
-ampl_module_snopt
 amplpy>=0.14.0
 pandas==1.5.3
 numpy==1.26.2
-amplpyfinance
 streamlit==1.37.0
 matplotlib==3.7.1
 seaborn==0.13.2
-yfinance==0.2.59
-beautifulsoup4==4.13.3
-requests==2.32.3
-altair==4.2.2
-pydeck==0.9.0
-googlemaps==4.10.0
-networkx==3.2.1
-nextmv>=0.5.0
-openpyxl>=3.1.5
-lxml==4.9.3
-#nextmv @ git+https://github.com/nextmv-io/nextmv-py@v0.4.1
-#nextmv @ git+https://github.com/nextmv-io/nextmv-py@bbd330e

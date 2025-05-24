@@ -1,7 +1,0 @@
-model kkt_equilibrium_model.mod;
-    data data_2029.dat;
-    option solver KNITRO;
-    solve;
-    option display_1col 1;
-    display PN, theta, x, q;
-    

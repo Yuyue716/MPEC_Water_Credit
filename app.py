@@ -2,7 +2,6 @@ import streamlit as st
 import numpy as np
 import pandas as pd
 from generate_dat import write_dat_file
-from results_parser import parse_results
 import os
 from amplpy import AMPL, modules
 os.environ["AMPL_LICENSE"] = st.secrets["AMPL_LICENSE"]
@@ -29,7 +28,7 @@ base_demand = st.slider("Base total market demand (D)", min_value=500, max_value
 
 
 # Load historical R and C data
-cost_df = pd.read_csv("total_cow_revenue_model_2025_2029.csv")
+cost_df = pd.read_csv("total_cost_revenue_data.csv")
 farm_ids = [f"F{i+1}" for i in range(num_farms)]
 Size = {f: max(1, int(np.random.normal(size_mean, size_sd))) for f in farm_ids}
 Cap_base = {f: Size[f] * cap_per_hectare for f in farm_ids}

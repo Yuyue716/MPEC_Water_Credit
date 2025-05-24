@@ -44,7 +44,7 @@ subject to
 
     KKT_q {i in I}: 0 <= C - R - lambda[i] * (Cap[i] - E[i] * (1 - theta[i])) complements q[i] >= 0;
 
-    KKT_x {j in I, i in J: i != j}:  0 <= lambda[i] - PN complements x[i,j] >= 0;
+    KKT_x {j in I, i in J: i != j}:  0 <= lambda[j] - PN complements x[i,j] >= 0;
 
     comp_nitrogen {i in I}: 0 <=   Cap[i] * q[i] - ( E[i] * q[i] * (1 - theta[i])) + net_credit[i] complements lambda[i] >= 0;
 

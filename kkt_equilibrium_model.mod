@@ -42,21 +42,13 @@ subject to
     KKT_theta_lb {i in I}: 0 <= 2 * k * theta[i] + gamma[i] - lambda[i] * q[i] * E[i] complements mu[i] >= 0;
     KKT_theta_ub {i in I}: 0 <= lambda[i] * q[i] * E[i] - 2 * k * theta[i] + mu[i] complements gamma[i] >= 0;
 
-    KKT_q {i in I}: 0 <= C - R - lambda[i] * (Cap[i] - E[i] * (1 - theta[i])) complements q[i] >= 0;
+    KKT_q {i in I}:
+    0 <= C - R + lambda[i] * E[i] * (1 - theta[i]) ⊥ q[i] >= 0;
 
-    KKT_buy {i in I, j in J: i != j}:
-        0 <= lambda[j] - PN complements x[i,j] >= 0;
-
-    KKT_sell {i in I, j in J: i != j}:
-        0 <= PN - lambda[i] complements x[i,j] >= 0;
-
-
-    comp_nitrogen {i in I}: 0 <=   Cap[i] * q[i] - ( E[i] * q[i] * (1 - theta[i])) + net_credit[i] complements lambda[i] >= 0;
+    KKT_x {i in I, j in J: i != j}:
+    0 <= lambda[j] - PN ⊥ x[i,j] >= 0;
 
     no_credit_sales_without_production {i in I}: sum {j in J: j != i} x[i,j] <= q[i] * E[i];
 
     min_production {i in I}: q[i] >= min_prod_factor * Size[i];
-
-    total_demand: sum {i in I} q[i] >= D;
-
 

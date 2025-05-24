@@ -4,9 +4,9 @@ import pandas as pd
 from generate_dat import write_dat_file
 from results_parser import parse_results
 import os
-from amplpy import AMPL
-
+from amplpy import AMPL, modules
 os.environ["AMPL_LICENSE"] = st.secrets["AMPL_LICENSE"]
+modules.activate(os.environ["AMPL_LICENSE"])
 ampl = AMPL()
 
 st.write("AMPL is ready!")

@@ -8,8 +8,6 @@ os.environ["AMPL_LICENSE"] = st.secrets["AMPL_LICENSE"]
 modules.activate(os.environ["AMPL_LICENSE"])
 ampl = AMPL()
 
-st.write("AMPL is ready!")
-
 st.title("Water Credit Market Simulator")
 
 # Sliders for user input
@@ -57,11 +55,14 @@ for t, year in enumerate(available_years):
     theta = ampl.get_variable("theta").get_values().to_list()
     q = ampl.get_variable("q").get_values().to_dict()
     x = ampl.get_variable("x").get_values().to_dict()
+    lamda = ampl.get_variable("lambda").get_values().to_dict()
     print(f"\n=== Year {year} ===")
     print("Production quantities (q):")
     for farm, val in q.items():
         print(f"Farm {farm}: {val}")
-
+    print("Shadow price for water credit (lamda):")
+    for farm, val in lamda.items():
+        print(f"Farm {farm}: {val}")
     print("\nCredit trades (x[i,j]):")
     for (i, j), val in x.items():
         if abs(val) > 1e-6:

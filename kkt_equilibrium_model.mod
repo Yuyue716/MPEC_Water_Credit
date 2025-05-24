@@ -13,7 +13,6 @@ param Size {I};               # Farm size
 param min_prod_factor;        # Minimum production factor
 
 
-
 # Decision Variables
 var q {I} >= 0;               # Production quantity
 var theta {I} >= 0, <= 1;     # Emission reduction level

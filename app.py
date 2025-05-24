@@ -1,15 +1,15 @@
 import streamlit as st
 import numpy as np
 import pandas as pd
-import amplpy
 from generate_dat import write_dat_file
 from results_parser import parse_results
 import os
-from amplpy import AMPL, Environment
+from amplpy import AMPL
 
-ampl = AMPL(Environment())
-ampl.set_option("ampl_license", os.environ["AMPL_LICENSE"])
+os.environ["AMPL_LICENSE"] = st.secrets["AMPL_LICENSE"]
+ampl = AMPL()
 
+st.write("AMPL is ready!")
 
 st.title("Water Credit Market Simulator")
 

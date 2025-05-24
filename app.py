@@ -52,8 +52,8 @@ for t, year in enumerate(available_years):
     ampl.read("kkt_equilibrium_model.mod")
     ampl.read_data(dat_path)
     ampl.set_option("solver", "knitro")
+    ampl.set_option("log_file", "solver_output.log")
     ampl.solve()
-    solver_output = ampl.get_output()
     # Extract variables directly
     PN = ampl.get_variable("PN").value()
     theta = ampl.get_variable("theta").get_values().to_list()
@@ -91,5 +91,8 @@ st.line_chart(pd.DataFrame({"Avg Trade per Farm": trade_series}, index=available
 
 st.subheader("Average Production per Farm")
 st.line_chart(pd.DataFrame({"Avg Production per Farm": q_series}, index=available_years))
+with open("solver_output.log", "r") as f:
+    solver_output = f.read()
+
 st.subheader("AMPL Solver Output")
 st.text(solver_output)

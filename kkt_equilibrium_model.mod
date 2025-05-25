@@ -45,9 +45,7 @@ subject to
     KKT_q {i in I}:
     0 <= C - R + lambda[i] * E[i] * (1 - theta[i]) complements q[i] >= 0;
 
-    KKT_x {i in I, j in J: i != j}:
-    0 <= lambda[j] - PN ⊥ x[i,j] >= 0;
-
+    KKT_x {i in I, j in J: i != j}:  0 <= lambda[j] - PN complements  x[i,j] >= 0;
 
     no_credit_sales_without_production {i in I}: sum {j in J: j != i} x[i,j] <= q[i] * E[i];
 

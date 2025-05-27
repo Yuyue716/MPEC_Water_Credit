@@ -76,7 +76,7 @@ available_years = sorted(cost_df["Year"].unique())
 
 # Model files
 mod_trading = "kkt_equilibrium_model.mod"
-mod_subsidy = "subsidy_penalty_model.mod"
+mod_subsidy = "no_trading_kkt_equilibrium_model.mod"
 
 col1, col2 = st.columns(2)
 

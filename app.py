@@ -128,7 +128,6 @@ with col2:
         model_type = "subsidy", 
         farm_ids=farm_ids
     )
-    st.line_chart(pd.DataFrame({"PN": PN_s}, index=available_years))
     st.subheader("Water Credit Price (PN)")
     st.line_chart(pd.DataFrame({"PN": PN_s}, index=available_years))
 

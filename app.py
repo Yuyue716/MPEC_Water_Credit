@@ -115,7 +115,7 @@ with col2:
     st.subheader(" Subsidy/Penalty Model")
     PN_s, theta_s, trade_s, q_s  = run_model(
         mod_file=mod_trading,
-        years=available_years,
+        years = len(available_years),
         E_base=E_base,
         tighten = tighten,
         demand_growth = demand_growth,

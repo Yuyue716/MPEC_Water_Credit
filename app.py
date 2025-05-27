@@ -53,7 +53,6 @@ k = st.slider("Abatement cost (k)", 0.01, 1.0, 0.1)
 min_prod = st.slider("Minimum production factor", 1, 20, 10)
 tighten = st.slider("Cap tightening rate per year (%)", 0, 20, 5) / 100
 demand_growth = st.slider("Demand growth rate per year (%)", 0, 20, 5) / 100
-years = st.slider("Years to simulate", 1, 10, 5)
 E_mean = st.slider("Average emission rate per unit (E)", 10.0, 40.0, 30.0)
 E_sd = st.slider("Emission variation (std dev)", 0.0, 20.0, 10.0)
 num_farms = 5 
@@ -85,7 +84,7 @@ with col1:
     st.subheader("Trading Model")
     PN_t, theta_t, trade_t, q_t = run_model(
         mod_file=mod_trading,
-        years=available_years,
+        years=len(available_years),
         E_base=E_base,
         tighten = tighten,
         demand_growth = demand_growth,

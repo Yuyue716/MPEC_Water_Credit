@@ -75,46 +75,6 @@ trade_series = []
 q_series = []
 available_years = sorted(cost_df["Year"].unique())
 
-# for t, year in enumerate(available_years):
-#     R_scalar = cost_df[cost_df["Year"] == year]["Total_Revenue_per_day (€)"].iloc[0] * 365
-#     C_scalar = cost_df[cost_df["Year"] == year]["Operational_Cost_per_day (€)"].iloc[0] * 365
-#     Cap = {f: Cap_base[f] * ((1 - tighten) ** t) for f in farm_ids}
-#     E = {f: E_base[f] for f in farm_ids}
-#     D = int(base_demand * ((1 + demand_growth) ** t))
-#     dat_path = f"data_{year}.dat"
-#     write_dat_file(k, min_prod, D, R_scalar, C_scalar, Cap, E, Size, dat_path)
-#     ampl.reset()  
-#     ampl.read("kkt_equilibrium_model.mod")
-#     ampl.read_data(dat_path)
-#     ampl.set_option("solver", "knitro")
-#     ampl.solve()
-#     # Extract variables directly
-#     PN = ampl.get_variable("PN").value()
-#     theta = ampl.get_variable("theta").get_values().to_list()
-#     q = ampl.get_variable("q").get_values().to_dict()
-#     x = ampl.get_variable("x").get_values().to_dict()
-#     lamda = ampl.get_variable("lambda").get_values().to_dict()
-#     print(f"\n=== Year {year} ===")
-#     print("Production quantities (q):")
-#     for farm, val in q.items():
-#         print(f"Farm {farm}: {val}")
-#     print("Shadow price for water credit (lamda):")
-#     for farm, val in lamda.items():
-#         print(f"Farm {farm}: {val}")
-#     print("\nCredit trades (x[i,j]):")
-#     for (i, j), val in x.items():
-#         if abs(val) > 1e-6:
-#             print(f"Farm {i} sent {val:.4f} credits to Farm {j}")
-
-#     print("\nCredit price (PN):")
-#     print(PN)
-#     avg_theta = np.mean([v for _, v in theta])
-#     total_trade = sum([v for _, v in x.items()])
-#     avg_q = np.mean([v for _, v in q.items()])
-#     PN_series.append(PN)
-#     theta_series.append(avg_theta)
-#     trade_series.append(total_trade / len(farm_ids))
-#     q_series.append(avg_q)
 # Model files
 mod_trading = "kkt_equilibrium_model.mod"
 mod_subsidy = "subsidy_penalty_model.mod"
@@ -180,16 +140,3 @@ with col2:
 
     st.subheader("Average Production per Farm")
     st.line_chart(pd.DataFrame({"Avg Production per Farm": q_s}, index=available_years))
-
-# # Display results
-# st.subheader("Water Credit Price (PN)")
-# st.line_chart(pd.DataFrame({"PN": PN_series}, index=available_years))
-
-# st.subheader("Average Emission Reduction (θ)")
-# st.line_chart(pd.DataFrame({"θ": theta_series}, index=available_years))
-
-# st.subheader("Average Water Credit Trade per Farm")
-# st.line_chart(pd.DataFrame({"Avg Trade per Farm": trade_series}, index=available_years))
-
-# st.subheader("Average Production per Farm")
-# st.line_chart(pd.DataFrame({"Avg Production per Farm": q_series}, index=available_years))

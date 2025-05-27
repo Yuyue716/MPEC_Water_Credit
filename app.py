@@ -125,7 +125,7 @@ with col1:
     st.subheader("Trading Model")
     PN_t, theta_t, trade_t, q_t = run_model(
         mod_file=mod_trading,
-        year_inputs=available_years,
+        years=available_years,
         E_base=E_base,
         tighten = tighten,
         demand_growth = demand_growth,
@@ -155,7 +155,7 @@ with col2:
     st.subheader(" Subsidy/Penalty Model")
     PN_s, theta_s, trade_s, q_s  = run_model(
         mod_file=mod_trading,
-        year_inputs=available_years,
+        years=available_years,
         E_base=E_base,
         tighten = tighten,
         demand_growth = demand_growth,

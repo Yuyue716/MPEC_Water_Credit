@@ -1,4 +1,4 @@
-def write_dat_file(k, min_prod, D, R, C, Cap, E, Size, filename):
+def write_dat_file(k, min_prod, D, R, C, Cap, E, Size,penalty,filename):
     with open(filename, "w") as f:
         farm_ids = list(Size.keys())  
         f.write("set I := " + " ".join(farm_ids) + ";\n\n")
@@ -9,7 +9,7 @@ def write_dat_file(k, min_prod, D, R, C, Cap, E, Size, filename):
         f.write(f"param D := {D};\n")
         f.write(f"param R := {R};\n")
         f.write(f"param C := {C};\n\n")
-
+        f.write(f"param f := {penalty};\n\n")
         # Indexed parameters
         for param, data in [("Cap", Cap), ("E", E), ("Size", Size)]:
             f.write(f"param {param} :=\n")

@@ -111,7 +111,6 @@ with col1:
     st.line_chart(pd.DataFrame({"Avg Production per Farm": q_t}, index=available_years))
 
 with col2:
-    f_penalty = st.slider("Fine for N exceedance (f)", 0, 500, 100)
     st.subheader(" Subsidy/Penalty Model")
     PN_s, theta_s, trade_s, q_s  = run_model(
         mod_file=mod_subsidy,

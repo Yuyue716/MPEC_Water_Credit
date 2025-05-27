@@ -114,7 +114,7 @@ with col2:
     f_penalty = st.slider("Fine for N exceedance (f)", 0, 500, 100)
     st.subheader(" Subsidy/Penalty Model")
     PN_s, theta_s, trade_s, q_s  = run_model(
-        mod_file=mod_trading,
+        mod_file=mod_subsidy,
         years = len(available_years),
         E_base=E_base,
         tighten = tighten,

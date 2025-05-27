@@ -43,7 +43,7 @@ def run_model(mod_file, model_type, years, k, min_prod, tighten, demand_growth, 
         trade_series.append(total_trade / len(farm_ids))
         q_series.append(avg_q)
 
-    return PN_series, theta_series, trade_series, q_series, available_years[:years]
+    return PN_series, theta_series, trade_series, q_series
 
 
 st.title("Water Credit Market Simulator")

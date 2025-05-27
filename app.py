@@ -6,7 +6,7 @@ import os
 from amplpy import AMPL, modules
 os.environ["AMPL_LICENSE"] = st.secrets["AMPL_LICENSE"]
 modules.activate(os.environ["AMPL_LICENSE"])
-def run_model(mod_file, years, k, min_prod, tighten, demand_growth, cost_df, Cap_base, E_base, Size, base_demand, penalty, farm_ids):
+def run_model(mod_file, model_type, years, k, min_prod, tighten, demand_growth, cost_df, Cap_base, E_base, Size, base_demand, penalty, farm_ids):
     ampl = AMPL()
     PN_series, theta_series, trade_series, q_series = [], [], [], []
     available_years = sorted(cost_df["Year"].unique())
@@ -18,7 +18,7 @@ def run_model(mod_file, years, k, min_prod, tighten, demand_growth, cost_df, Cap
         E = {f: E_base[f] for f in farm_ids}
         D = int(base_demand * ((1 + demand_growth) ** t))
         dat_path = f"data_{mod_file}_{year}.dat"
-        write_dat_file(k, min_prod, D, R_scalar, C_scalar, Cap, E, Size, penalty, dat_path)
+        write_dat_file(k, min_prod, D, R_scalar, C_scalar, Cap, E, Size, penalty, dat_path, model_type)
 
         ampl.reset()
         ampl.read(mod_file)
@@ -95,6 +95,7 @@ with col1:
         base_demand = base_demand,
         penalty = penalty,
         min_prod=min_prod,
+        model_type = "trading", 
         farm_ids=farm_ids
     )
     st.subheader("Water Credit Price (PN)")
@@ -125,6 +126,7 @@ with col2:
         base_demand = base_demand,
         penalty = penalty,
         min_prod=min_prod,
+        model_type = "subsidy", 
         farm_ids=farm_ids
     )
     st.line_chart(pd.DataFrame({"PN": PN_s}, index=available_years))

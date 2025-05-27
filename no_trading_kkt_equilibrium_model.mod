@@ -2,6 +2,7 @@ set I;
 
 param R;                     # Revenue per unit
 param C;                     # Cost per unit
+param D;
 param k;                     # Abatement cost coefficient
 param f;                     # Fine per unit of excess N
 param Cap {I};               # Nitrogen cap

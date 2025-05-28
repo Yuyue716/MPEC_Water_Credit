@@ -49,15 +49,18 @@ def run_model(mod_file, model_type, years, k, min_prod, tighten, demand_growth, 
                     # Net reward/penalty (for display as "PN")
                     net_value = sum(s * unused[farm] - penalty * excess[farm] for farm in unused)
                     avg_balance = (sum(unused.values()) - sum(excess.values())) / len(unused)
-
+                    theta = ampl.get_variable("theta").get_values().to_list()
+                    avg_theta = np.mean([v for _, v in theta]) if theta else 0
+                    q = ampl.get_variable("q").get_values().to_dict()
+                    avg_q = np.mean(list(q.values())) if q else 0
                     PN_series.append(net_value)
+                    theta_series.append(avg_theta)
                     trade_series.append(avg_balance)  # Interpreted like "net credit position"
-                    excess_series.append(excess)
-                    unused_series.append(unused)
+                    q_series.append(avg_q)
 
             # Add additional values for subsidy output
         if model_type == "subsidy":
-                return PN_series, theta_series, trade_series, q_series, excess_series, unused_series
+                return PN_series, theta_series, trade_series, q_series
         else:
                 return PN_series, theta_series, trade_series, q_series
         # avg_theta = np.mean([v for _, v in theta]) if theta else 0

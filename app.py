@@ -9,7 +9,6 @@ modules.activate(os.environ["AMPL_LICENSE"])
 def run_model(mod_file, model_type, years, k, min_prod, tighten, demand_growth, cost_df, Cap_base, E_base, Size, base_demand, penalty, s, farm_ids):
     ampl = AMPL()
     PN_series, theta_series, trade_series, q_series = [], [], [], []
-    excess_series, unused_series = [], []
     available_years = sorted(cost_df["Year"].unique())
     
     for t, year in enumerate(available_years[:years]):
@@ -20,6 +19,10 @@ def run_model(mod_file, model_type, years, k, min_prod, tighten, demand_growth, 
         D = int(base_demand * ((1 + demand_growth) ** t))
         dat_path = f"data_{mod_file}_{model_type}_{year}.dat"
         write_dat_file(k, min_prod, D, R_scalar, C_scalar, Cap, E, Size, penalty, s, dat_path, model_type)
+        print(f"Year: {year}")
+        print(f"  Cap sample: {[Cap[f] for f in list(Cap.keys())[:2]]}")
+        print(f"  D: {D}")
+        print(f"  R: {R_scalar:.2f}, C: {C_scalar:.2f}")
 
         ampl.reset()
         ampl.read(mod_file)
@@ -72,7 +75,7 @@ def run_model(mod_file, model_type, years, k, min_prod, tighten, demand_growth, 
         # trade_series.append(total_trade / len(farm_ids))
         # q_series.append(avg_q)
 
-    return PN_series, theta_series, trade_series, q_series
+    # return PN_series, theta_series, trade_series, q_series
 
 
 st.title("Water Credit Market Simulator")

@@ -6,9 +6,10 @@ import os
 from amplpy import AMPL, modules
 os.environ["AMPL_LICENSE"] = st.secrets["AMPL_LICENSE"]
 modules.activate(os.environ["AMPL_LICENSE"])
-def run_model(mod_file, model_type, years, k, min_prod, tighten, demand_growth, cost_df, Cap_base, E_base, Size, base_demand, penalty, farm_ids):
+def run_model(mod_file, model_type, years, k, min_prod, tighten, demand_growth, cost_df, Cap_base, E_base, Size, base_demand, penalty, farm_ids, **kwargs):
     ampl = AMPL()
     PN_series, theta_series, trade_series, q_series = [], [], [], []
+    excess_series, unused_series = [], []
     available_years = sorted(cost_df["Year"].unique())
     
     for t, year in enumerate(available_years[:years]):
@@ -18,7 +19,7 @@ def run_model(mod_file, model_type, years, k, min_prod, tighten, demand_growth, 
         E = {f: E_base[f] for f in farm_ids}
         D = int(base_demand * ((1 + demand_growth) ** t))
         dat_path = f"data_{mod_file}_{model_type}_{year}.dat"
-        write_dat_file(k, min_prod, D, R_scalar, C_scalar, Cap, E, Size, penalty, dat_path, model_type)
+        write_dat_file(k, min_prod, D, R_scalar, C_scalar, Cap, E, Size, penalty, f, s, dat_path, model_type)
 
         ampl.reset()
         ampl.read(mod_file)
@@ -26,22 +27,46 @@ def run_model(mod_file, model_type, years, k, min_prod, tighten, demand_growth, 
         ampl.set_option("solver", "knitro")
         ampl.solve()
 
-        try:
+        PN = ampl.get_variable("PN").value()
+        theta = ampl.get_variable("theta").get_values().to_list()
+        q = ampl.get_variable("q").get_values().to_dict()
+        x = ampl.get_variable("x").get_values().to_dict() if "x" in ampl.get_variable_names() else {}
+
+        if model_type == "trading":
             PN = ampl.get_variable("PN").value()
-            theta = ampl.get_variable("theta").get_values().to_list()
-            q = ampl.get_variable("q").get_values().to_dict()
-            x = ampl.get_variable("x").get_values().to_dict() if "x" in ampl.get_variable_names() else {}
-        except:
-            PN, theta, q, x = 0, [], {}, {}
+            x = ampl.get_variable("x").get_values().to_dict()
+            avg_trade = sum(x.values()) / len(E_base)
+            PN_series.append(PN)
+            trade_series.append(avg_trade)
 
-        avg_theta = np.mean([v for _, v in theta]) if theta else 0
-        total_trade = sum(x.values()) if x else 0
-        avg_q = np.mean(list(q.values())) if q else 0
+        elif model_type == "subsidy":
+                    excess = ampl.get_variable("excess").get_values().to_dict()
+                    unused = ampl.get_variable("unused").get_values().to_dict()
 
-        PN_series.append(PN)
-        theta_series.append(avg_theta)
-        trade_series.append(total_trade / len(farm_ids))
-        q_series.append(avg_q)
+                    # Net reward/penalty (for display as "PN")
+                    s = kwargs.get("s", 0)
+                    f = kwargs.get("f", 0)
+                    net_value = sum(s * unused[farm] - f * excess[farm] for farm in unused)
+                    avg_balance = (sum(unused.values()) - sum(excess.values())) / len(unused)
+
+                    PN_series.append(net_value)
+                    trade_series.append(avg_balance)  # Interpreted like "net credit position"
+                    excess_series.append(excess)
+                    unused_series.append(unused)
+
+            # Add additional values for subsidy output
+        if model_type == "subsidy":
+                return PN_series, theta_series, trade_series, q_series, excess_series, unused_series
+        else:
+                return PN_series, theta_series, trade_series, q_series
+        # avg_theta = np.mean([v for _, v in theta]) if theta else 0
+        # total_trade = sum(x.values()) if x else 0
+        # avg_q = np.mean(list(q.values())) if q else 0
+
+        # PN_series.append(PN)
+        # theta_series.append(avg_theta)
+        # trade_series.append(total_trade / len(farm_ids))
+        # q_series.append(avg_q)
 
     return PN_series, theta_series, trade_series, q_series
 

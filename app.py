@@ -6,7 +6,7 @@ import os
 from amplpy import AMPL, modules
 os.environ["AMPL_LICENSE"] = st.secrets["AMPL_LICENSE"]
 modules.activate(os.environ["AMPL_LICENSE"])
-def run_model(mod_file, model_type, years, k, min_prod, tighten, demand_growth, cost_df, Cap_base, E_base, Size, base_demand, penalty, s, farm_ids):
+def run_model(mod_file, model_type, years, k, min_prod, tighten, demand_growth, cost_df, Cap_base, E_base, Size, base_demand,R, C, penalty, s, farm_ids):
     ampl = AMPL()
     PN_series, theta_series, trade_series, q_series = [], [], [], []
     available_years = sorted(cost_df["Year"].unique())
@@ -102,6 +102,8 @@ size_sd = st.slider("Size variability (std dev)", 0, 20, 5)
 base_demand = st.slider("Base total market demand (D)", min_value=500, max_value=1000, value=750, step=10)
 penalty = st.slider("Penalty for water pollution", min_value=1, max_value=50, value=1, step=10)
 s = st.slider("Subsidy for water pollution", min_value=1, max_value=50, value=1, step=10)
+R = st.slider("Revenue for each cow", min_value=1, max_value=5000, value=5000, step=10)
+C = st.slider("Cost for each cow", min_value=1, max_value=5000, value=1000, step=10)
 # Load historical R and C data
 cost_df = pd.read_csv("total_cost_revenue_data.csv")
 farm_ids = [f"F{i+1}" for i in range(num_farms)]

@@ -3,6 +3,7 @@ import numpy as np
 import pandas as pd
 from generate_dat import write_dat_file
 import os
+import pandas as pd
 from amplpy import AMPL, modules
 os.environ["AMPL_LICENSE"] = st.secrets["AMPL_LICENSE"]
 modules.activate(os.environ["AMPL_LICENSE"])
@@ -33,6 +34,21 @@ def run_model(mod_file, model_type, years, k, min_prod, tighten, demand_growth, 
             avg_theta = np.mean([v for _, v in theta]) if theta else 0
             total_trade = sum(x.values()) if x else 0
             avg_q = np.mean(list(q.values())) if q else 0
+            
+
+            # Extract all farm IDs from the tuple keys of x
+            farms = sorted(set(f for pair in x.keys() for f in pair))
+
+            # Initialize a DataFrame with zeros
+            trade_matrix = pd.DataFrame(0.0, index=farms, columns=farms)
+
+            # Fill in the trades
+            for (seller, buyer), value in x.items():
+                trade_matrix.loc[seller, buyer] = value
+
+            # Display in Streamlit
+            st.subheader("Trade Matrix (Farm-to-Farm)")
+            st.dataframe(trade_matrix.style.format("{:.2f}"))
 
             PN_series.append(PN)
             theta_series.append(avg_theta)
@@ -45,7 +61,6 @@ def run_model(mod_file, model_type, years, k, min_prod, tighten, demand_growth, 
             st.write(f"K: {k}") 
             st.write("θ (theta):", theta)
             st.write("q (production):", q)
-            st.write("x (trades):", x)
             st.write("PN:", PN)
 
         elif model_type == "subsidy":

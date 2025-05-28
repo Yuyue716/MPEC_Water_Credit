@@ -137,6 +137,8 @@ with col1:
         base_demand = base_demand,
         penalty = penalty,
         s = s,
+        R = R,
+        C = C,
         min_prod=min_prod,
         model_type = "trading", 
         farm_ids=farm_ids
@@ -168,6 +170,8 @@ with col2:
         base_demand = base_demand,
         penalty = penalty,
         s = s,
+        R = R,
+        C = C,
         min_prod=min_prod,
         model_type = "subsidy", 
         farm_ids=farm_ids

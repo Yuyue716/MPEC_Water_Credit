@@ -38,15 +38,15 @@ def run_model(mod_file, model_type, years, k, min_prod, tighten, demand_growth, 
             theta_series.append(avg_theta)
             trade_series.append(total_trade / len(farm_ids))
             q_series.append(avg_q)
-            st.write(f"Year: {year}")
-            st.write(f"Cap: {Cap}")   
-            st.write(f"Revenue: {R_scalar}")   
-            st.write(f"Cost: {C_scalar}") 
-            st.write(f"K: {k}") 
-            st.write("θ (theta):", theta)
-            st.write("q (production):", q)
-            st.write("x (trades):", x)
-            st.write("PN:", PN)
+            # st.write(f"Year: {year}")
+            # st.write(f"Cap: {Cap}")   
+            # st.write(f"Revenue: {R_scalar}")   
+            # st.write(f"Cost: {C_scalar}") 
+            # st.write(f"K: {k}") 
+            # st.write("θ (theta):", theta)
+            # st.write("q (production):", q)
+            # st.write("x (trades):", x)
+            # st.write("PN:", PN)
 
         elif model_type == "subsidy":
                     excess = ampl.get_variable("excess").get_values().to_dict()
@@ -63,11 +63,11 @@ def run_model(mod_file, model_type, years, k, min_prod, tighten, demand_growth, 
                     theta_series.append(avg_theta)
                     trade_series.append(avg_balance)  # Interpreted like "net credit position"
                     q_series.append(avg_q)
-                    st.write(f"Year: {year}")
-                    st.write("θ (theta):", theta)
-                    st.write("q (production):", q)
-                    st.write("excess N:", excess)
-                    st.write("unused N:", unused)
+                    # st.write(f"Year: {year}")
+                    # st.write("θ (theta):", theta)
+                    # st.write("q (production):", q)
+                    # st.write("excess N:", excess)
+                    # st.write("unused N:", unused)
 
             # Add additional values for subsidy output
     if model_type == "subsidy":

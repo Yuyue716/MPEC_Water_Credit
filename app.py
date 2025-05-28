@@ -85,8 +85,8 @@ cap_per_hectare = st.slider("Cap per hectare (kg N/ha)", 50, 400, 200)
 size_mean = st.slider("Average farm size (hectares)", 5, 100, 15)
 size_sd = st.slider("Size variability (std dev)", 0, 20, 5)
 base_demand = st.slider("Base total market demand (D)", min_value=500, max_value=1000, value=750, step=10)
-penalty = st.slider("Penalty/Subsidy for water pollution", min_value=1, max_value=50, value=1, step=10)
-
+penalty = st.slider("Penalty for water pollution", min_value=1, max_value=50, value=1, step=10)
+s = st.slider("Subsidy for water pollution", min_value=1, max_value=50, value=1, step=10)
 # Load historical R and C data
 cost_df = pd.read_csv("total_cost_revenue_data.csv")
 farm_ids = [f"F{i+1}" for i in range(num_farms)]

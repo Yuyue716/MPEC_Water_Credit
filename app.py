@@ -6,7 +6,7 @@ import os
 from amplpy import AMPL, modules
 os.environ["AMPL_LICENSE"] = st.secrets["AMPL_LICENSE"]
 modules.activate(os.environ["AMPL_LICENSE"])
-def run_model(mod_file, model_type, years, k, min_prod, tighten, demand_growth, cost_df, Cap_base, E_base, Size, base_demand, penalty, farm_ids, **kwargs):
+def run_model(mod_file, model_type, years, k, min_prod, tighten, demand_growth, cost_df, Cap_base, E_base, Size, base_demand, penalty, s, farm_ids):
     ampl = AMPL()
     PN_series, theta_series, trade_series, q_series = [], [], [], []
     excess_series, unused_series = [], []
@@ -27,26 +27,27 @@ def run_model(mod_file, model_type, years, k, min_prod, tighten, demand_growth, 
         ampl.set_option("solver", "knitro")
         ampl.solve()
 
-        PN = ampl.get_variable("PN").value()
-        theta = ampl.get_variable("theta").get_values().to_list()
-        q = ampl.get_variable("q").get_values().to_dict()
-        x = ampl.get_variable("x").get_values().to_dict() if "x" in ampl.get_variable_names() else {}
-
         if model_type == "trading":
             PN = ampl.get_variable("PN").value()
-            x = ampl.get_variable("x").get_values().to_dict()
-            avg_trade = sum(x.values()) / len(E_base)
+            theta = ampl.get_variable("theta").get_values().to_list()
+            q = ampl.get_variable("q").get_values().to_dict()
+            x = ampl.get_variable("x").get_values().to_dict() if "x" in ampl.get_variable_names() else {}
+            avg_theta = np.mean([v for _, v in theta]) if theta else 0
+            total_trade = sum(x.values()) if x else 0
+            avg_q = np.mean(list(q.values())) if q else 0
+
             PN_series.append(PN)
-            trade_series.append(avg_trade)
+            theta_series.append(avg_theta)
+            trade_series.append(total_trade / len(farm_ids))
+            q_series.append(avg_q)
+
 
         elif model_type == "subsidy":
                     excess = ampl.get_variable("excess").get_values().to_dict()
                     unused = ampl.get_variable("unused").get_values().to_dict()
 
                     # Net reward/penalty (for display as "PN")
-                    s = kwargs.get("s", 0)
-                    f = kwargs.get("f", 0)
-                    net_value = sum(s * unused[farm] - f * excess[farm] for farm in unused)
+                    net_value = sum(s * unused[farm] - penalty * excess[farm] for farm in unused)
                     avg_balance = (sum(unused.values()) - sum(excess.values())) / len(unused)
 
                     PN_series.append(net_value)
@@ -119,6 +120,7 @@ with col1:
         k=k,
         base_demand = base_demand,
         penalty = penalty,
+        s = s,
         min_prod=min_prod,
         model_type = "trading", 
         farm_ids=farm_ids
@@ -149,6 +151,7 @@ with col2:
         k=k,
         base_demand = base_demand,
         penalty = penalty,
+        s = s,
         min_prod=min_prod,
         model_type = "subsidy", 
         farm_ids=farm_ids

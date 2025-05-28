@@ -35,7 +35,11 @@ def run_model(mod_file, model_type, years, k, min_prod, tighten, demand_growth, 
             total_trade = sum(x.values()) if x else 0
             avg_q = np.mean(list(q.values())) if q else 0
             
-
+            PN_series.append(PN)
+            theta_series.append(avg_theta)
+            trade_series.append(total_trade / len(farm_ids))
+            q_series.append(avg_q)
+            
             # Extract all farm IDs from the tuple keys of x
             farms = sorted(set(f for pair in x.keys() for f in pair))
 
@@ -50,10 +54,6 @@ def run_model(mod_file, model_type, years, k, min_prod, tighten, demand_growth, 
             st.subheader("Trade Matrix (Farm-to-Farm)")
             st.dataframe(trade_matrix.style.format("{:.2f}"))
 
-            PN_series.append(PN)
-            theta_series.append(avg_theta)
-            trade_series.append(total_trade / len(farm_ids))
-            q_series.append(avg_q)
             st.write(f"Year: {year}")
             st.write(f"Cap: {Cap}")   
             st.write(f"Revenue: {R}")   
@@ -117,8 +117,8 @@ size_sd = st.slider("Size variability (std dev)", 0, 20, 5)
 base_demand = st.slider("Base total market demand (D)", min_value=500, max_value=1000, value=750, step=10)
 penalty = st.slider("Penalty for water pollution", min_value=1, max_value=50, value=1, step=10)
 s = st.slider("Subsidy for water pollution", min_value=1, max_value=50, value=1, step=10)
-R = st.slider("Revenue for each cow", min_value=1, max_value=5000, value=5000, step=10)
-C = st.slider("Cost for each cow", min_value=1, max_value=5000, value=1000, step=10)
+R = st.slider("Revenue for each cow", min_value=1, max_value=50, value=30, step=10)
+C = st.slider("Cost for each cow", min_value=1, max_value=50, value=20, step=10)
 # Load historical R and C data
 cost_df = pd.read_csv("total_cost_revenue_data.csv")
 farm_ids = [f"F{i+1}" for i in range(num_farms)]

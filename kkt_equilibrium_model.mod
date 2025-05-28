@@ -15,14 +15,14 @@ param min_prod_factor;        # Minimum production factor
 
 # Decision Variables
 var q {I} >= 0;               # Production quantity
-var theta {I} >= 0, <= 1;     # Emission reduction level
+var theta {I} >= 0, <= 100;     # Emission reduction level
 var x {I, J} >= 0;            # Credits sent from i to j (x[i,j])
 var PN >= 0;                  # Market price for nitrogen credits
 
 # Dual Variables (for KKT conditions)
 var lambda {I} >= 0;          # Dual for nitrogen constraint
 var mu {I} >= 0;              # Dual for theta[i] ≥ 0
-var gamma {I} >= 0;           # Dual for theta[i] ≤ 1
+var gamma {I} >= 0;           # Dual for theta[i] ≤ 100
 var v {J, I} >= 0;            # Dual for x[i,j] ≥ 0 (buyer side)
 var v_s {I, J} >= 0;          # Dual for x[i,j] ≥ 0 (seller side)
 
@@ -37,13 +37,13 @@ maximize profit{i in I}:
 
 # Nitrogen Constraint 
 subject to 
-    nitrogen_balance {i in I}: Cap[i] + net_credit[i] - q[i] * E[i] * (1 - theta[i]) >= 0;
+    nitrogen_balance {i in I}: Cap[i] + net_credit[i] - q[i] * E[i] * (1 - theta[i]/100) >= 0;
 
-    KKT_theta_lb {i in I}: 0 <= 2 * k * theta[i] + gamma[i] - lambda[i] * q[i] * E[i] complements mu[i] >= 0;
-    KKT_theta_ub {i in I}: 0 <= lambda[i] * q[i] * E[i] - 2 * k * theta[i] + mu[i] complements gamma[i] >= 0;
+    KKT_theta_lb {i in I}: 0 <= 2 * k * theta[i] + gamma[i] - lambda[i] * q[i] * E[i]/100 complements mu[i] >= 0;
+    KKT_theta_ub {i in I}: 0 <= lambda[i] * q[i] * E[i]/100 - 2 * k * theta[i] + mu[i] complements gamma[i] >= 0;
 
     KKT_q {i in I}:
-    0 <= C - R + lambda[i] * E[i] * (1 - theta[i]) complements q[i] >= 0;
+    0 <= C - R + lambda[i] * E[i] * (1 - theta[i]/100) complements q[i] >= 0;
 
     KKT_x {i in I, j in J: i != j}:  0 <= lambda[j] - PN complements  x[i,j] >= 0;
 

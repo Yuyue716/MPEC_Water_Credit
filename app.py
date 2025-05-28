@@ -31,7 +31,7 @@ def run_model(mod_file, model_type, years, k, min_prod, tighten, demand_growth, 
             PN = ampl.get_variable("PN").value()
             theta = ampl.get_variable("theta").get_values().to_list()
             q = ampl.get_variable("q").get_values().to_dict()
-            x = ampl.get_variable("x").get_values().to_dict() if "x" in ampl.get_variable_names() else {}
+            x = ampl.get_variable("x").get_values().to_dict() 
             avg_theta = np.mean([v for _, v in theta]) if theta else 0
             total_trade = sum(x.values()) if x else 0
             avg_q = np.mean(list(q.values())) if q else 0

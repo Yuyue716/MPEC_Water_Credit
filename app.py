@@ -20,7 +20,7 @@ def run_model(mod_file, model_type, years, k, min_prod, tighten, demand_growth, 
         dat_path = f"data_{mod_file}_{model_type}_{year}.dat"
         write_dat_file(k, min_prod, D, R_scalar, C_scalar, Cap, E, Size, penalty, s, dat_path, model_type)
         print(f"Year: {year}")
-        print(f"  Cap sample: {[Cap[f] for f in list(Cap.keys())[:2]]}")
+        print(f"  Cap sample: {[Cap[f] for f in list(Cap.keys())]}")
         print(f"  D: {D}")
         print(f"  R: {R_scalar:.2f}, C: {C_scalar:.2f}")
 
@@ -62,9 +62,9 @@ def run_model(mod_file, model_type, years, k, min_prod, tighten, demand_growth, 
                     q_series.append(avg_q)
 
             # Add additional values for subsidy output
-        if model_type == "subsidy":
+    if model_type == "subsidy":
                 return PN_series, theta_series, trade_series, q_series
-        else:
+    else:
                 return PN_series, theta_series, trade_series, q_series
         # avg_theta = np.mean([v for _, v in theta]) if theta else 0
         # total_trade = sum(x.values()) if x else 0

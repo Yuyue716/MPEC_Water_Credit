@@ -19,7 +19,7 @@ def run_model(mod_file, model_type, years, k, min_prod, tighten, demand_growth, 
         E = {f: E_base[f] for f in farm_ids}
         D = int(base_demand * ((1 + demand_growth) ** t))
         dat_path = f"data_{mod_file}_{model_type}_{year}.dat"
-        write_dat_file(k, min_prod, D, R_scalar, C_scalar, Cap, E, Size, penalty, f, s, dat_path, model_type)
+        write_dat_file(k, min_prod, D, R_scalar, C_scalar, Cap, E, Size, penalty, penalty, s, dat_path, model_type)
 
         ampl.reset()
         ampl.read(mod_file)

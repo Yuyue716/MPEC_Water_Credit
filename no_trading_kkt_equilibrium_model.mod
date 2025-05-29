@@ -12,9 +12,10 @@ param Size {I};               # Farm size
 param min_prod_factor;        # Minimum production factor
 
 # Decision variables
-var q {I} >= 0;               # Production quantity
+var q {I} >= 0;
+var delta {I} ; # Net difference from cap (positive = unused, negative = excess)
+
 var theta {I} >= 0, <= 100;     # Emission reduction level (0-100%)
-var delta {I};                # Net difference from cap (positive = unused, negative = excess)
 
 maximize total_profit:
     sum {i in I} (
@@ -26,12 +27,9 @@ maximize total_profit:
  
 
 # Constraints
-subject to nitrogen_balance {i in I}:
-    q[i] * E[i] * (1 - theta[i]/100) + delta[i] = Cap[i];
+subject to 
+    nitrogen_balance {i in I}:  q[i] * E[i] * (1 - theta[i]/100) + delta[i] = Cap[i];
 
-subject to min_production {i in I}:
-    q[i] >= min_prod_factor * Size[i];
+    min_production {i in I}:    q[i] >= min_prod_factor * Size[i];
 
-subject to theta_limit {i in I}:
-    theta[i] <= 100;
 

@@ -31,8 +31,9 @@ var v_s {I, J} >= 0;          # Dual for x[i,j] ≥ 0 (seller side)
 var net_credit {i in I} = sum {j in J: j != i} x[j,i] - sum {j in J: j != i} x[i,j];
 
 # Profit Objective per farm
-maximize profit{i in I}:
-    R * q[i] - C * q[i] - k * theta[i]^2 + PN * sum {j in J: j != i} (x[i,j] - x[j,i]);
+maximize total_profit: sum {i in I} (
+    R * q[i] - C * q[i] - k * theta[i]^2 + PN * sum {j in J: j != i} (x[i,j] - x[j,i])
+);
 
 
 # Nitrogen Constraint 

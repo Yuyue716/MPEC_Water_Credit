@@ -32,4 +32,6 @@ subject to nitrogen_balance {i in I}:
 subject to min_production {i in I}:
     q[i] >= min_prod_factor * Size[i];
 
+subject to theta_limit {i in I}:
+    theta[i] <= 100;
 

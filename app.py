@@ -103,7 +103,7 @@ def run_model(mod_file, model_type, years, k, min_prod, tighten, demand_growth, 
 st.title("Water Credit Market Simulator")
 
 # Sliders for user input
-k = st.slider("Abatement cost (k)", 0.01, 10.0, 0.1)
+k = st.slider("Abatement cost (k)", 1.0, 20.0, 10.0)
 min_prod = st.slider("Minimum production factor", 1, 20, 10)
 tighten = st.slider("Cap tightening rate per year (%)", 0, 20, 5) / 100
 demand_growth = st.slider("Demand growth rate per year (%)", 0, 20, 5) / 100

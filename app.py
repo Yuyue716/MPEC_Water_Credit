@@ -7,19 +7,19 @@ import pandas as pd
 from amplpy import AMPL, modules
 os.environ["AMPL_LICENSE"] = st.secrets["AMPL_LICENSE"]
 modules.activate(os.environ["AMPL_LICENSE"])
-def run_model(mod_file, model_type, years, k, min_prod, tighten, demand_growth, cost_df, Cap_base, E_base, Size, base_demand,R, C, credit_price, farm_ids):
+def run_model(mod_file, model_type, years, k, min_prod, tighten, demand_growth, cost_df, Cap_base, E_base, Size, base_demand, credit_price, farm_ids):
     ampl = AMPL()
     PN_series, theta_series, trade_series, q_series = [], [], [], []
     available_years = sorted(cost_df["Year"].unique())
     
     for t, year in enumerate(available_years[:years]):
-        # R_scalar = cost_df[cost_df["Year"] == year]["Total_Revenue_per_day (€)"].iloc[0] * 365
-        # C_scalar = cost_df[cost_df["Year"] == year]["Operational_Cost_per_day (€)"].iloc[0] * 365
+        R_scalar = cost_df[cost_df["Year"] == year]["Total_Revenue_per_day (€)"].iloc[0] * 365
+        C_scalar = cost_df[cost_df["Year"] == year]["Operational_Cost_per_day (€)"].iloc[0] * 365
         Cap = {f: Cap_base[f] * ((1 - tighten) ** t) for f in farm_ids}
         E = {f: E_base[f] for f in farm_ids}
         D = int(base_demand * ((1 + demand_growth) ** t))
         dat_path = f"data_{mod_file}_{model_type}_{year}.dat"
-        write_dat_file(k, min_prod, D, R, C, Cap, E, Size, credit_price, dat_path, model_type)
+        write_dat_file(k, min_prod, D, R_scalar, C_scalar, Cap, E, Size, credit_price, dat_path, model_type)
         ampl.reset()
         ampl.read(mod_file)
         ampl.read_data(dat_path)
@@ -114,9 +114,8 @@ cap_per_hectare = st.slider("Cap per hectare (kg N/ha)", 50, 400, 250)
 size_mean = st.slider("Average farm size (hectares)", 5, 100, 15)
 size_sd = st.slider("Size variability (std dev)", 0, 20, 5)
 base_demand = st.slider("Base total market demand (D)", min_value=5000, max_value=20000, value=10000, step=100)
-credit_price = st.slider("Credit price for goverment control system", min_value=1, max_value=50, value=1, step=10)
-R = st.slider("Revenue for each cow", min_value=1, max_value=50, value=30, step=10)
-C = st.slider("Cost for each cow", min_value=1, max_value=50, value=20, step=10)
+credit_price = st.slider("Credit price (only for goverment controled system)", min_value=0.01, max_value=10, value=0.1, step=0.1)
+
 # Load historical R and C data
 cost_df = pd.read_csv("total_cost_revenue_data.csv")
 farm_ids = [f"F{i+1}" for i in range(num_farms)]
@@ -149,8 +148,6 @@ with col1:
         k=k,
         base_demand = base_demand,
         credit_price= credit_price,
-        R = R,
-        C = C,
         min_prod=min_prod,
         model_type = "trading", 
         farm_ids=farm_ids
@@ -181,8 +178,6 @@ with col2:
         k=k,
         base_demand = base_demand,
         credit_price= credit_price,
-        R = R,
-        C = C,
         min_prod=min_prod,
         model_type = "subsidy", 
         farm_ids=farm_ids

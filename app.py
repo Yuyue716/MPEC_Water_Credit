@@ -7,7 +7,7 @@ import pandas as pd
 from amplpy import AMPL, modules
 os.environ["AMPL_LICENSE"] = st.secrets["AMPL_LICENSE"]
 modules.activate(os.environ["AMPL_LICENSE"])
-def run_model(mod_file, model_type, years, k, min_prod, tighten, demand_growth, cost_df, Cap_base, E_base, Size, base_demand,R, C, penalty, s, farm_ids):
+def run_model(mod_file, model_type, years, k, min_prod, tighten, demand_growth, cost_df, Cap_base, E_base, Size, base_demand,R, C, credit_price, farm_ids):
     ampl = AMPL()
     PN_series, theta_series, trade_series, q_series = [], [], [], []
     available_years = sorted(cost_df["Year"].unique())
@@ -19,7 +19,7 @@ def run_model(mod_file, model_type, years, k, min_prod, tighten, demand_growth, 
         E = {f: E_base[f] for f in farm_ids}
         D = int(base_demand * ((1 + demand_growth) ** t))
         dat_path = f"data_{mod_file}_{model_type}_{year}.dat"
-        write_dat_file(k, min_prod, D, R, C, Cap, E, Size, penalty, s, dat_path, model_type)
+        write_dat_file(k, min_prod, D, R, C, Cap, E, Size, credit_price, dat_path, model_type)
         ampl.reset()
         ampl.read(mod_file)
         ampl.read_data(dat_path)
@@ -68,13 +68,13 @@ def run_model(mod_file, model_type, years, k, min_prod, tighten, demand_growth, 
                     unused = ampl.get_variable("unused").get_values().to_dict()
 
                     # Net reward/penalty (for display as "PN")
-                    net_value = sum(s * unused[farm] - penalty * excess[farm] for farm in unused)
+                    u = ampl.get_parameter("u").value()
                     avg_balance = (sum(unused.values()) - sum(excess.values())) / len(unused)
                     theta = ampl.get_variable("theta").get_values().to_list()
                     avg_theta = np.mean([v for _, v in theta]) if theta else 0
                     q = ampl.get_variable("q").get_values().to_dict()
                     avg_q = np.mean(list(q.values())) if q else 0
-                    PN_series.append(net_value)
+                    PN_series.append(u)
                     theta_series.append(avg_theta)
                     trade_series.append(avg_balance)  # Interpreted like "net credit position"
                     q_series.append(avg_q)
@@ -115,8 +115,7 @@ cap_per_hectare = st.slider("Cap per hectare (kg N/ha)", 50, 400, 250)
 size_mean = st.slider("Average farm size (hectares)", 5, 100, 15)
 size_sd = st.slider("Size variability (std dev)", 0, 20, 5)
 base_demand = st.slider("Base total market demand (D)", min_value=5000, max_value=20000, value=10000, step=100)
-penalty = st.slider("Penalty for water pollution", min_value=1, max_value=50, value=1, step=10)
-s = st.slider("Subsidy for water pollution", min_value=1, max_value=50, value=1, step=10)
+credit_price = st.slider("Credit price for goverment control system", min_value=1, max_value=50, value=1, step=10)
 R = st.slider("Revenue for each cow", min_value=1, max_value=50, value=30, step=10)
 C = st.slider("Cost for each cow", min_value=1, max_value=50, value=20, step=10)
 # Load historical R and C data
@@ -150,8 +149,7 @@ with col1:
         Size=Size,
         k=k,
         base_demand = base_demand,
-        penalty = penalty,
-        s = s,
+        credit_price= credit_price,
         R = R,
         C = C,
         min_prod=min_prod,
@@ -183,8 +181,7 @@ with col2:
         Size=Size,
         k=k,
         base_demand = base_demand,
-        penalty = penalty,
-        s = s,
+        credit_price= credit_price,
         R = R,
         C = C,
         min_prod=min_prod,

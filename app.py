@@ -110,11 +110,11 @@ tighten = st.slider("Cap tightening rate per year (%)", 0, 20, 5) / 100
 demand_growth = st.slider("Demand growth rate per year (%)", 0, 20, 5) / 100
 E_mean = st.slider("Average emission rate per unit (E)", 10.0, 40.0, 30.0)
 E_sd = st.slider("Emission variation (std dev)", 0.0, 20.0, 10.0)
-num_farms = 100
-cap_per_hectare = st.slider("Cap per hectare (kg N/ha)", 50, 400, 200)
+num_farms = 100 
+cap_per_hectare = st.slider("Cap per hectare (kg N/ha)", 50, 400, 250)
 size_mean = st.slider("Average farm size (hectares)", 5, 100, 15)
 size_sd = st.slider("Size variability (std dev)", 0, 20, 5)
-base_demand = st.slider("Base total market demand (D)", min_value=500, max_value=1000, value=750, step=10)
+base_demand = st.slider("Base total market demand (D)", min_value=5000, max_value=20000, value=10000, step=100)
 penalty = st.slider("Penalty for water pollution", min_value=1, max_value=50, value=1, step=10)
 s = st.slider("Subsidy for water pollution", min_value=1, max_value=50, value=1, step=10)
 R = st.slider("Revenue for each cow", min_value=1, max_value=50, value=30, step=10)

@@ -54,14 +54,14 @@ def run_model(mod_file, model_type, years, k, min_prod, tighten, demand_growth, 
             st.subheader("Trade Matrix (Farm-to-Farm)")
             st.dataframe(trade_matrix.style.format("{:.2f}"))
 
-            st.write(f"Year: {year}")
-            st.write(f"Cap: {Cap}")   
-            st.write(f"Revenue: {R}")   
-            st.write(f"Cost: {C}") 
-            st.write(f"K: {k}") 
-            st.write("θ (theta):", theta)
-            st.write("q (production):", q)
-            st.write("PN:", PN)
+            # st.write(f"Year: {year}")
+            # st.write(f"Cap: {Cap}")   
+            # st.write(f"Revenue: {R}")   
+            # st.write(f"Cost: {C}") 
+            # st.write(f"K: {k}") 
+            # st.write("θ (theta):", theta)
+            # st.write("q (production):", q)
+            # st.write("PN:", PN)
 
         elif model_type == "subsidy":
                     excess = ampl.get_variable("excess").get_values().to_dict()

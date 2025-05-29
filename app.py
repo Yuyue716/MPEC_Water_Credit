@@ -114,7 +114,7 @@ cap_per_hectare = st.slider("Cap per hectare (kg N/ha)", 50, 400, 250)
 size_mean = st.slider("Average farm size (hectares)", 5, 100, 15)
 size_sd = st.slider("Size variability (std dev)", 0, 20, 5)
 base_demand = st.slider("Base total market demand (D)", min_value=5000, max_value=20000, value=10000, step=100)
-credit_price = st.slider("Credit price (only for goverment controled system)", min_value=1, max_value=10.0, value=7, step=1)
+credit_price = st.slider("Credit price (only for goverment controled system)", min_value=1.0, max_value=10.0, value=7.0, step=1.0)
 
 # Load historical R and C data
 cost_df = pd.read_csv("total_cost_revenue_data.csv")

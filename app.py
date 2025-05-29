@@ -50,26 +50,25 @@ def run_model(mod_file, model_type, years, k, min_prod, tighten, demand_growth, 
             for (seller, buyer), value in x.items():
                 trade_matrix.loc[seller, buyer] = value
 
-            # Display in Streamlit
-            st.subheader("Trade Matrix (Farm-to-Farm)")
-            st.dataframe(trade_matrix.style.format("{:.2f}"))
+            # # Display in Streamlit
+            # st.subheader("Trade Matrix (Farm-to-Farm)")
+            # st.dataframe(trade_matrix.style.format("{:.2f}"))
 
-            st.write(f"Year: {year}")
-            st.write(f"Cap: {Cap}")   
-            st.write(f"Revenue: {R}")   
-            st.write(f"Cost: {C}") 
-            st.write(f"K: {k}") 
-            st.write("θ (theta):", theta)
-            st.write("q (production):", q)
-            st.write("PN:", PN)
+            # st.write(f"Year: {year}")
+            # st.write(f"Cap: {Cap}")   
+            # st.write(f"Revenue: {R}")   
+            # st.write(f"Cost: {C}") 
+            # st.write(f"K: {k}") 
+            # st.write("θ (theta):", theta)
+            # st.write("q (production):", q)
+            # st.write("PN:", PN)
 
         elif model_type == "subsidy":
-                    excess = ampl.get_variable("excess").get_values().to_dict()
-                    unused = ampl.get_variable("unused").get_values().to_dict()
-
+                    delta = ampl.get_variable("delta").get_values().to_dict()
+                    
                     # Net reward/penalty (for display as "PN")
                     u = ampl.get_parameter("u").value()
-                    avg_balance = (sum(unused.values()) - sum(excess.values())) / len(unused)
+                    avg_balance = sum(delta.values()) / len(delta) if delta else 0
                     theta = ampl.get_variable("theta").get_values().to_list()
                     avg_theta = np.mean([v for _, v in theta]) if theta else 0
                     q = ampl.get_variable("q").get_values().to_dict()

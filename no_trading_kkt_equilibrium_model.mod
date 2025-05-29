@@ -32,4 +32,4 @@ subject to
 
     min_production {i in I}:    q[i] >= min_prod_factor * Size[i];
 
-
+    production_upper_bound {i in I}:   q[i] <= 20 * Size[i];

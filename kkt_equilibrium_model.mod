@@ -11,7 +11,7 @@ param E {I};                  # Emissions per unit of production
 param Cap {I};                # Nitrogen cap per farm
 param Size {I};               # Farm size  
 param min_prod_factor;        # Minimum production factor
-
+param max_prod_factor;        # Minimum production factor
 
 # Decision Variables
 var q {I} >= 0;               # Production quantity
@@ -54,3 +54,4 @@ subject to
     min_production {i in I}: q[i] >= min_prod_factor * Size[i];
 
     credit_market_balance: sum {i in I} net_credit[i] = 0;
+    production_upper_bound {i in I}:   q[i] <= max_prod_factor * Size[i];

@@ -103,7 +103,7 @@ def run_model(mod_file, model_type, years, k, min_prod, max_prod,tighten, demand
 st.title("Water Credit Market Simulator")
 
 # Sliders for user input
-k = st.slider("Abatement cost (k)", 1.0, 20.0, 10.0)
+k = st.slider("Abatement cost (€/percent of emission reduction)", 1.0, 20.0, 10.0,help="This represents the cost of reducing emissions through adapting sustainable farming practices. The abatement cost grows quadratically, which means that the more you reduce your emission with sustainable farming practice, the more expensive it gets.")
 min_prod = st.slider("Minimum production factor", 1, 20, 10)
 max_prod = st.slider("Minimum production factor", 10, 40, 20)
 tighten = st.slider("Cap tightening rate per year (%)", 0, 20, 5) / 100

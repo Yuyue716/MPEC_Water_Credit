@@ -5,7 +5,6 @@ set J within I;               # Potential trading partners
 # Parameters
 param R;                      # Revenue per unit of production
 param C;                      # Cost per unit of production
-param D;                      # Total market demand  
 param k;                      # Cost coefficient for emission reduction
 param E {I};                  # Emissions per unit of production 
 param Cap {I};                # Nitrogen cap per farm

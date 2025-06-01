@@ -1,4 +1,4 @@
-def write_dat_file(k, min_prod, max_prod, D, R, C, Cap, E, Size,credit_price, filename, model_type):
+def write_dat_file(k, min_prod, max_prod, R, C, Cap, E, Size,credit_price, filename, model_type):
     with open(filename, "w") as f:
         farm_ids = list(Size.keys())  
         f.write("set I := " + " ".join(farm_ids) + ";\n\n")
@@ -8,7 +8,6 @@ def write_dat_file(k, min_prod, max_prod, D, R, C, Cap, E, Size,credit_price, fi
         f.write(f"param k := {k};\n")
         f.write(f"param min_prod_factor := {min_prod};\n")
         f.write(f"param max_prod_factor := {max_prod};\n")
-        f.write(f"param D := {D};\n")
         f.write(f"param R := {R};\n")
         f.write(f"param C := {C};\n")
         if model_type == "subsidy":

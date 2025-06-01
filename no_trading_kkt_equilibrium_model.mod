@@ -3,7 +3,6 @@ set I;  # Set of farms
 # Parameters
 param R;                      # Revenue per unit of production
 param C;                      # Cost per unit of production
-param D;                      # Total market demand (optional)
 param k;                      # Abatement cost coefficient
 param u;                      # Unit price for both fine and subsidy
 param Cap {I};                # Nitrogen cap per farm

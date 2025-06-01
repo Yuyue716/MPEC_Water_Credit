@@ -7,7 +7,7 @@ import pandas as pd
 from amplpy import AMPL, modules
 os.environ["AMPL_LICENSE"] = st.secrets["AMPL_LICENSE"]
 modules.activate(os.environ["AMPL_LICENSE"])
-def run_model(mod_file, model_type, years, k, min_prod, tighten, demand_growth, cost_df, Cap_base, E_base, Size, base_demand, credit_price, farm_ids):
+def run_model(mod_file, model_type, years, k, min_prod, max_prod,tighten, demand_growth, cost_df, Cap_base, E_base, Size, base_demand, credit_price, farm_ids):
     ampl = AMPL()
     PN_series, theta_series, trade_series, q_series = [], [], [], []
     available_years = sorted(cost_df["Year"].unique())
@@ -19,7 +19,7 @@ def run_model(mod_file, model_type, years, k, min_prod, tighten, demand_growth, 
         E = {f: E_base[f] for f in farm_ids}
         D = int(base_demand * ((1 + demand_growth) ** t))
         dat_path = f"data_{mod_file}_{model_type}_{year}.dat"
-        write_dat_file(k, min_prod, D, R_scalar, C_scalar, Cap, E, Size, credit_price, dat_path, model_type)
+        write_dat_file(k, min_prod, max_prod, D, R_scalar, C_scalar, Cap, E, Size, credit_price, dat_path, model_type)
         ampl.reset()
         ampl.read(mod_file)
         ampl.read_data(dat_path)
@@ -105,6 +105,7 @@ st.title("Water Credit Market Simulator")
 # Sliders for user input
 k = st.slider("Abatement cost (k)", 1.0, 20.0, 10.0)
 min_prod = st.slider("Minimum production factor", 1, 20, 10)
+max_prod = st.slider("Minimum production factor", 10, 40, 20)
 tighten = st.slider("Cap tightening rate per year (%)", 0, 20, 5) / 100
 demand_growth = st.slider("Demand growth rate per year (%)", 0, 20, 5) / 100
 E_mean = st.slider("Average emission rate per unit (E)", 10.0, 40.0, 30.0)
@@ -149,6 +150,7 @@ with col1:
         base_demand = base_demand,
         credit_price= credit_price,
         min_prod=min_prod,
+        max_prod=max_prod,
         model_type = "trading", 
         farm_ids=farm_ids
     )
@@ -179,6 +181,7 @@ with col2:
         base_demand = base_demand,
         credit_price= credit_price,
         min_prod=min_prod,
+        max_prod=max_prod,
         model_type = "subsidy", 
         farm_ids=farm_ids
     )

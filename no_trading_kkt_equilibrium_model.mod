@@ -10,6 +10,7 @@ param Cap {I};                # Nitrogen cap per farm
 param E {I};                  # Emission rate per unit of production
 param Size {I};               # Farm size
 param min_prod_factor;        # Minimum production factor
+param max_prod_factor;        # Maximum production factor
 
 # Decision variables
 var q {I} >= 0;
@@ -32,4 +33,4 @@ subject to
 
     min_production {i in I}:    q[i] >= min_prod_factor * Size[i];
 
-    production_upper_bound {i in I}:   q[i] <= 20 * Size[i];
+    production_upper_bound {i in I}:   q[i] <= max_prod_factor * Size[i];

@@ -204,7 +204,9 @@ with col2:
     )
     st.subheader("Watercedit Price (€)")
     st.line_chart(pd.DataFrame({"PN": PN_s}, index=available_years))
-    chart = alt.Chart(pd.DataFrame({"PN": PN_s}, index=available_years)).mark_line(point=True).encode(
+    df = pd.DataFrame({"PN": PN_s}, index=available_years).reset_index()    
+    df.columns = ["Year", "PN"] 
+    chart = alt.Chart(df).mark_line(point=True).encode(
         x=alt.X("Year:Q", title="Year"),
         y=alt.Y("PN:Q", title="PN (kg/ha)"),
         tooltip=["Year", "PN"]

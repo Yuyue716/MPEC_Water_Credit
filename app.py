@@ -103,19 +103,23 @@ st.title("Water Credit Market Simulator")
 
 # Sliders for user input
 st.subheader("Production Constraints")
-min_prod = st.slider("Minimum production (cows/hectare)", 1, 10, 1,help="This represents the minimum requirement amount of cows per hectare. It prevents people from only selling water credit without producing.")
-max_prod = st.slider("Maximum production factor(cows/hectare)", 10, 40, 20,help="This represents the maximum allowed amoutn of cows per hectare. It prevents the model from assigning unreasonably high production values.")
-k = st.slider("Abatement cost (€/percent of emission reduction)", 1.0, 20.0, 10.0,help="This represents the cost of reducing emissions through adapting sustainable farming practices. The abatement cost grows quadratically, which means that the more you reduce your emission with sustainable farming practice, the more expensive it gets.")
+min_prod = st.slider("Minimum production (cows/ha)", 1, 10, 1,help="This represents the minimum requirement amount of cows per hectare. It prevents people from only selling water credit without producing.")
+max_prod = st.slider("Maximum production factor(cows/ha)", 10, 40, 20,help="This represents the maximum allowed amoutn of cows per hectare. It prevents the model from assigning unreasonably high production values.")
 
-tighten = st.slider("Cap tightening rate per year (%)", 0, 20, 5) / 100
-demand_growth = st.slider("Demand growth rate per year (%)", 0, 20, 5) / 100
-E_mean = st.slider("Average emission rate per unit (E)", 10.0, 40.0, 30.0)
-E_sd = st.slider("Emission variation (std dev)", 0.0, 20.0, 10.0)
+st.subheader("Emissions for each farm")
+E_mean = st.slider("Average nitrogen emission (kg N/cow/year)", 10.0, 40.0, 30.0,help="This represents the average nitrogen emission per cow per year across all simulated farms.")
+E_sd = st.slider("Nitrogen emission variation (kg N/cow/year)", 0.0, 20.0, 10.0, help="This represents the standerd deviation of nitrogen emission per cow per year across all simulated farms.")
+
+st.subheader("Emissions cap")
+cap_per_hectare = st.slider("Cap per hectare (kg N/ha)", 50, 400, 250, help="This represents the maximum amount of nitrogen emission allowed per hectare. If a farm's emissions exceed this cap, it must purchase water credits. If emissions are below the cap, the farm can sell excess credits.")
+tighten = st.slider("Cap tightening rate per year (%)", 0, 20, 5,help="This defines how much the nitrogen emission cap decreases each year. Set a higher value to simulate stricter environmental policies over time. Set to 0 for a constant cap.") / 100
+st.subheader("Abatement cost")
+k = st.slider("Abatement cost (€/percent of emission reduction/year)", 1.0, 20.0, 10.0,help="This represents the cost of reducing emissions through adapting sustainable farming practices. The abatement cost grows quadratically, which means that the more you reduce your emission with sustainable farming practice, the more expensive it gets.")
+
 num_farms = 10 
-cap_per_hectare = st.slider("Cap per hectare (kg N/ha)", 50, 400, 250)
+
 size_mean = st.slider("Average farm size (hectares)", 5, 100, 15)
 size_sd = st.slider("Size variability (std dev)", 0, 20, 5)
-base_demand = st.slider("Base total market demand (D)", min_value=5000, max_value=20000, value=10000, step=100)
 credit_price = st.slider("Credit price (only for goverment controled system)", min_value=1.0, max_value=10.0, value=7.0, step=1.0)
 
 # Load historical R and C data

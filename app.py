@@ -204,7 +204,7 @@ with col2:
     )
     st.subheader("Watercedit Price (€)")
     st.line_chart(pd.DataFrame({"PN": PN_s}, index=available_years))
-    chart = alt.Chart(df).mark_line().encode(
+    chart = alt.Chart(pd.DataFrame({"PN": PN_s}, index=available_years)).mark_line().encode(
         x=alt.X("Year:O", title="Year"),
         y=alt.Y("PN:Q", title="PN (kg/ha)")  # Example unit
     ).properties(

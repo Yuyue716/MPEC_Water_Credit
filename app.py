@@ -154,6 +154,17 @@ available_years = sorted(cost_df["Year"].unique())
 mod_trading = "kkt_equilibrium_model.mod"
 mod_subsidy = "no_trading_kkt_equilibrium_model.mod"
 
+# Function to make line charts
+def alt_line_chart(data, y_col, y_title):
+    df = pd.DataFrame({y_col: data}, index=available_years).reset_index()
+    df.columns = ["Year", y_col]
+    df["Year"] = df["Year"].astype(int)
+    chart = alt.Chart(df).mark_line(point=True).encode(
+        x=alt.X("Year:Q", title="Year", axis=alt.Axis(format="d")),
+        y=alt.Y(f"{y_col}:Q", title=y_title),
+        tooltip=["Year", y_col]
+    )
+    return chart
 col1, col2 = st.columns(2)
 
 with col1:
@@ -203,7 +214,6 @@ with col2:
         farm_ids=farm_ids
     )
     st.subheader("Watercedit Price (€)")
-    st.line_chart(pd.DataFrame({"PN": PN_s}, index=available_years))
     df = pd.DataFrame({"PN": PN_s}, index=available_years).reset_index()    
     df.columns = ["Year", "PN"] 
     chart = alt.Chart(df).mark_line(point=True).encode(
@@ -212,13 +222,14 @@ with col2:
         title="Year",
         axis=alt.Axis(format="d")  
     ),
-        y=alt.Y("PN:Q", title="PN (kg/ha)"),
+        y=alt.Y("PN:Q", title="Watercredit price (€)"),
         tooltip=["Year", "PN"]
     )
 
     st.altair_chart(chart, use_container_width=True)
     st.subheader("Average Emission Reduction (kg N/cow/year)")
-    st.line_chart(pd.DataFrame({"θ": theta_s}, index=available_years))
+    chart2 = alt_line_chart(theta_s, "θ", "Average Emission Reduction (kg N/cow/year)")
+    st.altair_chart(chart2, use_container_width=True)
 
     st.subheader("Average Water Credit Trade per Farm")
     st.line_chart(pd.DataFrame({"Avg Trade per Farm": trade_s}, index=available_years))

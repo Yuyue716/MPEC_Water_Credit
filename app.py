@@ -189,22 +189,23 @@ with col1:
     )
     st.markdown("### Watercredit Price")
     st.markdown(" *This chart shows the watercredit price determined by the model based on the supply and demand balance.*")
-    st.line_chart(pd.DataFrame({"PN": PN_t}, index=available_years))
     chart1 = alt_line_chart(PN_t, "PN", "euros(€)")
     st.altair_chart(chart1, use_container_width=True)
 
-    st.markdown("#### Average Percentage of Emission Reduced")
+    st.markdown("### Average Percentage of Emission Reduced")
     st.markdown(" *This chart shows the average percentage of emission reduced across all simulated farms.*")
-    st.line_chart(pd.DataFrame({"θ": theta_t}, index=available_years))
     chart2 = alt_line_chart(theta_t, "θ", "%")
     st.altair_chart(chart2, use_container_width=True)
 
-    st.subheader("Average Water Credit Trade per Farm")
-    st.line_chart(pd.DataFrame({"Avg Trade per Farm": trade_t}, index=available_years))
+    st.markdown("### Average Water Credit Trade per Farm")
+    st.markdown(" *This chart shows the average number of credits traded (bought or sold) per participating farm, per year.*")
+    chart3 = alt_line_chart(trade_t, "x", "number  of  watercredit")
+    st.altair_chart(chart3, use_container_width=True)
 
-    st.subheader("Average Production per Farm")
-    st.line_chart(pd.DataFrame({"Avg Production per Farm": q_t}, index=available_years))
-
+    st.markdown("### Average number of cows per Farm")
+    st.markdown(" *This chart shows the average number of the optimize amount of cows per farm*")
+    chart4 = alt_line_chart(q_t, "q", "number  of  cows")
+    st.altair_chart(chart4, use_container_width=True)
 with col2:
     st.subheader("Government-regulated system")
     st.markdown(" *In the government-regulated system, the credit price is fixed by policymakers.*")
@@ -223,19 +224,22 @@ with col2:
         model_type = "subsidy", 
         farm_ids=farm_ids
     )
-    st.markdown("#### Watercredit Price (€)")
-    st.markdown(" *In the market-based system, farms can trade water credits freely. The water credit price is determined by market equilibrium.*")
-    chart6 = alt_line_chart(PN_s, "PN", "euros(€)")
+    st.markdown("### Watercredit Price ")
+    st.markdown(" *This chart shows the fixing watercredit price determined for the goverment-controled system.*")
+    chart5 = alt_line_chart(PN_s, "PN", "euros(€)")
+    st.altair_chart(chart5, use_container_width=True)
+
+    st.markdown("### Average Percentage of Emission Reduced")
+    st.markdown(" *This chart shows the average percentage of emission reduced across all simulated farms.*")
+    chart6 = alt_line_chart(theta_s, "θ", "%")
     st.altair_chart(chart6, use_container_width=True)
 
-    st.subheader("Average Emission Reduction")
-    chart6 = alt_line_chart(theta_s, "θ", "kg N/cow/year")
-    st.altair_chart(chart6, use_container_width=True)
-
-    st.subheader("Average Watercredit brought/")
+    st.markdown("### Average Watercredit bought/sold")
+    st.markdown(" *This chart shows the average watercredit bought or sold across all simulated farms to meet the nitrogen emission requirement.*")
     chart7 = alt_line_chart(trade_s, "x", "number  of  Watercredits")
     st.altair_chart(chart7, use_container_width=True)
 
-    st.subheader("Average Production per Farm")
+    st.markdown("### Average Production per Farm")
+    st.markdown(" *This chart shows the average number of the optimize amount of cows per farm*")
     chart8 = alt_line_chart(q_s, "q", "number  of  cows")
     st.altair_chart(chart8, use_container_width=True)

@@ -105,21 +105,19 @@ st.title("Water Credit Market Simulator")
 st.markdown("""
 Welcome! This is a simulator that evaluate the financial and enviromental benefit of water credit systems for cattle farms. 
 
-It compares the result between two types of water credit systems:
+This tool simulates two types of water credit systems for cattle farms: a market-based system and a government-regulated system.
 
-- A market-based system, where farms can trade water credits freely. The water credit price is determined by market equilibrium.
-- A government-regulated system, where the credit price is fixed by policymakers.
+In the market-based system, farms can trade water credits freely. The water credit price is determined by market equilibrium.
 
-The model supports simulations with 5 to 20 farms, each with different emission levels and farm sizes. It calculates:
+In the government-regulated system, the credit price is fixed by policymakers.
 
-- Optimal production levels and emission reductions for each farm over a 5-year period.
-- For the market-based system:
-  - The equilibrium water credit price
-  - The amount of water credit traded by farms
-- For the government-regulated system:
-  - How much credit each farm buys or sells to meet nitrogen cap requirements
+The model supports simulations with 5 to 20 farms, each with different emission levels and farm sizes. It calculates the optimal production levels and emission reductions for each farm over a 5-year period.
 
-Use the slider bar below to define farm characteristics and policy parameters to start the simulation!
+For the market-based system, it also shows the equilibrium water credit price and the amount of credit traded.
+
+For the government-controlled system, it reports how much credit each farm buys or sells to meet nitrogen cap requirements.
+
+Use the inputs below to define farm characteristics and policy parameters to start the simulation.
 """)
 
 

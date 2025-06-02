@@ -200,6 +200,7 @@ with col1:
 
 with col2:
     st.subheader("Government-regulated system")
+    st.markdown(" *This chart shows the watercredit price determined by the model based on the supply and demand balance.*")
     PN_s, theta_s, trade_s, q_s  = run_model(
         mod_file=mod_subsidy,
         years = len(available_years),
@@ -216,7 +217,7 @@ with col2:
         farm_ids=farm_ids
     )
     st.markdown("#### Watercredit Price (€)")
-    st.markdown(" *This chart shows the watercredit price determined by the model based on the supply and demand balance.*")
+    st.markdown(" *In the market-based system, farms can trade water credits freely. The water credit price is determined by market equilibrium.*")
     chart6 = alt_line_chart(PN_s, "PN", "euros(€)")
     st.altair_chart(chart6, use_container_width=True)
 

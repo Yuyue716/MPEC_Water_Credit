@@ -207,7 +207,21 @@ with col1:
     chart4 = alt_line_chart(q_t, "q", "number  of  cows")
     st.altair_chart(chart4, use_container_width=True)
 with col2:
-    st.markdown("<center>|</center>", unsafe_allow_html=True)
+    st.markdown(
+        """
+        <style>
+        .vertical-line {
+            border-left: 2px solid gray;
+            height: 100%;
+            position: absolute;
+            left: 50%;
+        }
+        </style>
+        <div class="vertical-line"></div>
+        """,
+        unsafe_allow_html=True
+    )
+
 
 with col3:
     st.subheader("Government-regulated system")

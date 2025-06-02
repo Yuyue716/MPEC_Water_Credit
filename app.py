@@ -8,7 +8,6 @@ import pandas as pd
 from amplpy import AMPL, modules
 os.environ["AMPL_LICENSE"] = st.secrets["AMPL_LICENSE"]
 modules.activate(os.environ["AMPL_LICENSE"])
-st.set_page_config(layout="wide")
 def run_model(mod_file, model_type, years, k, min_prod, max_prod,tighten, cost_df, Cap_base, E_base, Size, credit_price, farm_ids):
     ampl = AMPL()
     PN_series, theta_series, trade_series, q_series = [], [], [], []
@@ -168,7 +167,7 @@ def alt_line_chart(data, y_col, y_title):
         tooltip=["Year", y_col]
     )
     return chart
-col1, col2 = st.columns(2)
+col1, col2, col3 = st.columns([3, 0.1, 3])
 
 with col1:
     st.subheader("Market-based System")
@@ -208,6 +207,14 @@ with col1:
     chart4 = alt_line_chart(q_t, "q", "number  of  cows")
     st.altair_chart(chart4, use_container_width=True)
 with col2:
+    st.markdown(
+        """
+        <div style='border-left: 1px solid #ccc; height: 100%;'></div>
+        """,
+        unsafe_allow_html=True
+    )
+
+with col3:
     st.subheader("Government-regulated system")
     st.markdown(" *In the government-regulated system, the credit price is fixed by policymakers.*")
     PN_s, theta_s, trade_s, q_s  = run_model(

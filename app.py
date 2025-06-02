@@ -171,6 +171,7 @@ col1, col2 = st.columns(2)
 
 with col1:
     st.subheader("Market-based System")
+    st.markdown(" *In the market-based system, farms can trade water credits freely. The water credit price is determined by market equilibrium.*")
     PN_t, theta_t, trade_t, q_t = run_model(
         mod_file=mod_trading,
         years=len(available_years),
@@ -186,11 +187,17 @@ with col1:
         model_type = "trading", 
         farm_ids=farm_ids
     )
-    st.subheader("Watercedit Price (€)")
+    st.markdown("### Watercredit Price")
+    st.markdown(" *This chart shows the watercredit price determined by the model based on the supply and demand balance.*")
     st.line_chart(pd.DataFrame({"PN": PN_t}, index=available_years))
+    chart1 = alt_line_chart(PN_t, "PN", "euros(€)")
+    st.altair_chart(chart1, use_container_width=True)
 
-    st.subheader("Average Emission Reduction (kg N/cow/year)")
+    st.markdown("#### Average Percentage of Emission Reduced")
+    st.markdown(" *This chart shows the average percentage of emission reduced across all simulated farms.*")
     st.line_chart(pd.DataFrame({"θ": theta_t}, index=available_years))
+    chart2 = alt_line_chart(theta_t, "θ", "%")
+    st.altair_chart(chart2, use_container_width=True)
 
     st.subheader("Average Water Credit Trade per Farm")
     st.line_chart(pd.DataFrame({"Avg Trade per Farm": trade_t}, index=available_years))
@@ -200,7 +207,7 @@ with col1:
 
 with col2:
     st.subheader("Government-regulated system")
-    st.markdown(" *This chart shows the watercredit price determined by the model based on the supply and demand balance.*")
+    st.markdown(" *In the government-regulated system, the credit price is fixed by policymakers.*")
     PN_s, theta_s, trade_s, q_s  = run_model(
         mod_file=mod_subsidy,
         years = len(available_years),

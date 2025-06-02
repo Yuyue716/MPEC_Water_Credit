@@ -228,11 +228,13 @@ with col2:
 
     st.altair_chart(chart, use_container_width=True)
     st.subheader("Average Emission Reduction")
-    chart2 = alt_line_chart(theta_s, "θ", "kg N/cow/year")
-    st.altair_chart(chart2, use_container_width=True)
+    chart6 = alt_line_chart(theta_s, "θ", "kg N/cow/year")
+    st.altair_chart(chart6, use_container_width=True)
 
-    st.subheader("Average Water Credit Trade per Farm")
-    st.line_chart(pd.DataFrame({"Avg Trade per Farm": trade_s}, index=available_years))
+    st.subheader("Average Watercredit Trade per Farm")
+    chart7 = alt_line_chart(trade_s, "x", "number of Watercredits")
+    st.altair_chart(chart7, use_container_width=True)
 
     st.subheader("Average Production per Farm")
-    st.line_chart(pd.DataFrame({"Avg Production per Farm": q_s}, index=available_years))
+    chart8 = alt_line_chart(q_s, "q", "number of cows")
+    st.altair_chart(chart8, use_container_width=True)

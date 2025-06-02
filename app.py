@@ -3,6 +3,7 @@ import numpy as np
 import pandas as pd
 from generate_dat import write_dat_file
 import os
+import altair as alt
 import pandas as pd
 from amplpy import AMPL, modules
 os.environ["AMPL_LICENSE"] = st.secrets["AMPL_LICENSE"]
@@ -130,10 +131,12 @@ k = st.slider("Abatement cost (€/percent of emission reduction/year)", 1.0, 20
 
 
 st.subheader("Farm size and quantity")
-size_mean = st.slider("Average farm size (ha)", 5, 100, 15)
-size_sd = st.slider("Size variation (ha)", 0, 20, 5)
-num_farms = st.slider("Number of farms", 5, 20, 10)
-credit_price = st.slider("Credit price (only for goverment controled system)", min_value=1.0, max_value=10.0, value=7.0, step=1.0)
+size_mean = st.slider("Average farm size (ha)", 5, 100, 15, help="This represents the average farm size across all simulated farms in hectares")
+size_sd = st.slider("Size variation (ha)", 0, 20, 5, help="This represents the standard deviation of farm size across all simulated farms in hectares")
+num_farms = st.slider("Number of farms", 5, 20, 10, help="Choose how many farms will be included in the simulation" )
+
+st.subheader("Watercredit price(only for goverment-regulated system)")
+credit_price = st.slider("Watercredit price (€)", min_value=1.0, max_value=10.0, value=7.0, step=1.0, help="This represent the fixed watercredit price in the goverment-regulated system")
 # num_farms = 10 
 # Load historical R and C data
 cost_df = pd.read_csv("total_cost_revenue_data.csv")
@@ -170,10 +173,10 @@ with col1:
         model_type = "trading", 
         farm_ids=farm_ids
     )
-    st.subheader("Water Credit Price (PN)")
+    st.subheader("Watercedit Price (€)")
     st.line_chart(pd.DataFrame({"PN": PN_t}, index=available_years))
 
-    st.subheader("Average Emission Reduction (θ)")
+    st.subheader("Average Emission Reduction (kg N/cow/year)")
     st.line_chart(pd.DataFrame({"θ": theta_t}, index=available_years))
 
     st.subheader("Average Water Credit Trade per Farm")
@@ -199,10 +202,17 @@ with col2:
         model_type = "subsidy", 
         farm_ids=farm_ids
     )
-    st.subheader("Total earned subsidy/ paid fine")
+    st.subheader("Watercedit Price (€)")
     st.line_chart(pd.DataFrame({"PN": PN_s}, index=available_years))
+    chart = alt.Chart(df).mark_line().encode(
+        x=alt.X("Year:O", title="Year"),
+        y=alt.Y("PN:Q", title="PN (kg/ha)")  # Example unit
+    ).properties(
+        title="PN Over Time"
+    )
 
-    st.subheader("Average Emission Reduction (θ)")
+    st.altair_chart(chart, use_container_width=True)
+    st.subheader("Average Emission Reduction (kg N/cow/year)")
     st.line_chart(pd.DataFrame({"θ": theta_s}, index=available_years))
 
     st.subheader("Average Water Credit Trade per Farm")

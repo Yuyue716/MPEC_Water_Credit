@@ -206,9 +206,12 @@ with col2:
     st.line_chart(pd.DataFrame({"PN": PN_s}, index=available_years))
     df = pd.DataFrame({"PN": PN_s}, index=available_years).reset_index()    
     df.columns = ["Year", "PN"] 
-    df["Year"] = df["Year"].astype(int)
     chart = alt.Chart(df).mark_line(point=True).encode(
-        x=alt.X("Year:Q", title="Year"),
+        x=alt.X(
+        "Year:Q", 
+        title="Year",
+        axis=alt.Axis(format="d")  
+    ),
         y=alt.Y("PN:Q", title="PN (kg/ha)"),
         tooltip=["Year", "PN"]
     )

@@ -58,7 +58,8 @@ def run_model(mod_file, model_type, years, k, min_prod, max_prod,tighten, cost_d
             # st.write(f"Cap: {Cap}")   
             # st.write(f"Revenue: {R}")   
             # st.write(f"Cost: {C}") 
-            # st.write(f"K: {k}") 
+            st.write(f"x: {x}") 
+            st.write(f"trade_series: {trade_series}") 
             # st.write("θ (theta):", theta)
             # st.write("q (production):", q)
             # st.write("PN:", PN)
@@ -80,7 +81,8 @@ def run_model(mod_file, model_type, years, k, min_prod, max_prod,tighten, cost_d
                     # st.write(f"Year: {year}")
                     # st.write("θ (theta):", theta)
                     # st.write("q (production):", q)
-                    # st.write("excess N:", excess)
+                    st.write("delta:", delta)
+                    st.write("avg_balance :", avg_balance)
                     # st.write("unused N:", unused)
 
             # Add additional values for subsidy output
@@ -213,8 +215,8 @@ with col2:
         model_type = "subsidy", 
         farm_ids=farm_ids
     )
-    st.subheader("Watercedit Price")
-    st.markdown(" *This represents the watercredit price determined by the model based on the supply and demand balance.*")
+    st.markdown("#### Watercredit Price (€)")
+    st.markdown(" *This chart shows the watercredit price determined by the model based on the supply and demand balance.*")
     chart6 = alt_line_chart(PN_s, "PN", "euros(€)")
     st.altair_chart(chart6, use_container_width=True)
 

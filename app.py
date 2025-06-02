@@ -167,7 +167,7 @@ def alt_line_chart(data, y_col, y_title):
         tooltip=["Year", y_col]
     )
     return chart
-col1, col2, col3 = st.columns([3, 0.2, 3])
+col1, col2, col3 = st.columns([3, 1, 3])
 
 with col1:
     st.subheader("Market-based System")
@@ -207,20 +207,7 @@ with col1:
     chart4 = alt_line_chart(q_t, "q", "number  of  cows")
     st.altair_chart(chart4, use_container_width=True)
 with col2:
-    st.markdown(
-        """
-        <style>
-        .vertical-line {
-            border-left: 2px solid gray;
-            height: 100%;
-            position: absolute;
-            left: 50%;
-        }
-        </style>
-        <div class="vertical-line"></div>
-        """,
-        unsafe_allow_html=True
-    )
+    st.write(    )
 
 
 with col3:

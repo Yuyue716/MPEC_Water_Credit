@@ -59,7 +59,7 @@ def run_model(mod_file, model_type, years, k, min_prod, max_prod,tighten, cost_d
             # st.write(f"Cost: {C}") 
             # st.write(f"K: {k}") 
             # st.write("θ (theta):", theta)
-            # st.write("q (production):", q)
+            st.write("q (production):", q)
             # st.write("PN:", PN)
 
         elif model_type == "subsidy":
@@ -78,7 +78,7 @@ def run_model(mod_file, model_type, years, k, min_prod, max_prod,tighten, cost_d
                     q_series.append(avg_q)
                     # st.write(f"Year: {year}")
                     # st.write("θ (theta):", theta)
-                    # st.write("q (production):", q)
+                    st.write("q (production):", q)
                     # st.write("excess N:", excess)
                     # st.write("unused N:", unused)
 
@@ -104,8 +104,8 @@ st.title("Water Credit Market Simulator")
 # Intro paragraph
 st.markdown(
     """
-    This tool allows you to simulate and explore how farm production, emissions,
-    and environmental credit trading interact under various policy settings.
+    This tool simulates market-based versus government-regulated water credit systems for cattle farms. In the market-based system, the farmers can trade water credits freely and the water credit price will be determined by the market equilibrium It provides predictions on water credit pricing and emission reduction levels at market equilibrium.This tool allows you to simulate the cow farmer's behavior under the water credit trading market, and subsidy/penalty and explore water credit makret dynamic among cow farms. Below you can input the information related to farm production, nitrogen emissions,
+    and nitrogen emission cap etc, and the model will predict the water credit market dynamic for both the trading  .
     Adjust the sliders below to configure farm characteristics, emission factors,
     market conditions, and policy constraints. The calculator will help you understand
     how different decisions and regulations impact emissions, costs, and credit trading.

@@ -8,6 +8,7 @@ import pandas as pd
 from amplpy import AMPL, modules
 os.environ["AMPL_LICENSE"] = st.secrets["AMPL_LICENSE"]
 modules.activate(os.environ["AMPL_LICENSE"])
+st.set_page_config(layout="wide")
 def run_model(mod_file, model_type, years, k, min_prod, max_prod,tighten, cost_df, Cap_base, E_base, Size, credit_price, farm_ids):
     ampl = AMPL()
     PN_series, theta_series, trade_series, q_series = [], [], [], []
@@ -106,11 +107,11 @@ st.title("Water Credit Market Simulator")
 
 # Intro paragraph
 st.markdown("""
-Welcome! This is a simulator that evaluate the financial and enviromental benefit of water credit systems for cattle farms. 
+This is a simulator that evaluate the financial and enviromental benefit of water credit systems for cattle farms. 
 
 This tool simulates two types of water credit systems for cattle farms: a market-based system and a government-regulated system. In **the market-based system**, farms can trade water credits freely. The water credit price is determined by market equilibrium. In **the government-regulated system**, the credit price is fixed by policymakers.
 
-The model supports simulations with **5 to 20 farms**, each with different emission levels and farm sizes. It calculates the **optimal production levels** and **emission reductions** for each farm over a 5-year period. For the market-based system, it also shows the **equilibrium water credit price** and the **amount of credit traded**.For the government-controlled system, it reports **how much credit each farm buys or sells** to meet nitrogen cap requirements.
+The model supports simulations with **5 to 20 farms**, each with different emission levels and farm sizes. It calculates the **optimal production levels** and **emission reductions** for each farm over a 5-year period. For the market-based system, it also shows the **equilibrium water credit price** and the **amount of credit traded**. For the government-controlled system, it reports **how much credit each farm buys or sells** to meet nitrogen cap requirements.
 
 Use the slider bar below to define farm characteristics and policy parameters to start the simulation!
 """)
@@ -121,13 +122,13 @@ st.subheader("Production Constraints")
 min_prod = st.slider("Minimum production (cows/ha)", 1, 10, 1,help="This represents the minimum requirement amount of cows per hectare. It prevents people from only selling water credit without producing.")
 max_prod = st.slider("Maximum production factor(cows/ha)", 10, 40, 20,help="This represents the maximum allowed amoutn of cows per hectare. It prevents the model from assigning unreasonably high production values.")
 
-st.subheader("Emissions for each farm")
+st.subheader("Nitrogen emissions for each farm")
 E_mean = st.slider("Average nitrogen emission (kg N/cow/year)", 10.0, 40.0, 30.0,help="This represents the average nitrogen emission per cow per year across all simulated farms.")
 E_sd = st.slider("Nitrogen emission variation (kg N/cow/year)", 0.0, 20.0, 10.0, help="This represents the standerd deviation of nitrogen emission per cow per year across all simulated farms.")
 
-st.subheader("Emissions cap")
-cap_per_hectare = st.slider("Cap per hectare (kg N/ha)", 50, 400, 250, help="This represents the maximum amount of nitrogen emission allowed per hectare. If a farm's emissions exceed this cap, it must purchase water credits. If emissions are below the cap, the farm can sell excess credits.")
-tighten = st.slider("Cap tightening rate per year (%)", 0, 20, 5,help="This defines how much the nitrogen emission cap decreases each year. Set a higher value to simulate stricter environmental policies over time. Set to 0 for a constant cap.") / 100
+st.subheader("Nitrogen emissions cap")
+cap_per_hectare = st.slider("Emission cap per hectare (kg N/ha)", 50, 400, 250, help="This represents the maximum amount of nitrogen emission allowed per hectare. If a farm's emissions exceed this cap, it must purchase water credits. If emissions are below the cap, the farm can sell excess credits.")
+tighten = st.slider("Emission cap tightening rate per year (%)", 0, 20, 5,help="This defines how much the nitrogen emission cap decreases each year. Set a higher value to simulate stricter environmental policies over time. Set to 0 for a constant cap.") / 100
 st.subheader("Abatement cost")
 k = st.slider("Abatement cost (€/percent of emission reduction/year)", 1.0, 20.0, 10.0,help="This represents the cost of reducing emissions through adapting sustainable farming practices. The abatement cost grows quadratically, which means that the more you reduce your emission with sustainable farming practice, the more expensive it gets.")
 

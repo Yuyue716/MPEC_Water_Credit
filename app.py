@@ -213,28 +213,23 @@ with col2:
         model_type = "subsidy", 
         farm_ids=farm_ids
     )
-    st.subheader("Watercedit Price (€)")
-    df = pd.DataFrame({"PN": PN_s}, index=available_years).reset_index()    
-    df.columns = ["Year", "PN"] 
-    chart = alt.Chart(df).mark_line(point=True).encode(
-        x=alt.X(
-        "Year:Q", 
-        title="Year",
-        axis=alt.Axis(format="d")  
-    ),
-        y=alt.Y("PN:Q", title="Watercredit price (€)"),
-        tooltip=["Year", "PN"]
-    )
+    col1, col2 = st.columns([0.95, 0.05])
+    with col1:
+        st.subheader("Watercedit Price")
+    with col2:
+        st.help("This represents the watercredit price determined by the model based on the supply and demand balance.")
 
-    st.altair_chart(chart, use_container_width=True)
+    chart6 = alt_line_chart(PN_s, "PN", "euros(€)")
+    st.altair_chart(chart6, use_container_width=True)
+
     st.subheader("Average Emission Reduction")
     chart6 = alt_line_chart(theta_s, "θ", "kg N/cow/year")
     st.altair_chart(chart6, use_container_width=True)
 
-    st.subheader("Average Watercredit Trade per Farm")
-    chart7 = alt_line_chart(trade_s, "x", "number of Watercredits")
+    st.subheader("Average Watercredit brought/")
+    chart7 = alt_line_chart(trade_s, "x", "number  of  Watercredits")
     st.altair_chart(chart7, use_container_width=True)
 
     st.subheader("Average Production per Farm")
-    chart8 = alt_line_chart(q_s, "q", "number of cows")
+    chart8 = alt_line_chart(q_s, "q", "number  of  cows")
     st.altair_chart(chart8, use_container_width=True)

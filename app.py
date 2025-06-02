@@ -58,8 +58,8 @@ def run_model(mod_file, model_type, years, k, min_prod, max_prod,tighten, cost_d
             # st.write(f"Cap: {Cap}")   
             # st.write(f"Revenue: {R}")   
             # st.write(f"Cost: {C}") 
-            st.write(f"x: {x}") 
-            st.write(f"trade_series: {trade_series}") 
+            # st.write(f"x: {x}") 
+            # st.write(f"trade_series: {trade_series}") 
             # st.write("θ (theta):", theta)
             # st.write("q (production):", q)
             # st.write("PN:", PN)
@@ -81,8 +81,8 @@ def run_model(mod_file, model_type, years, k, min_prod, max_prod,tighten, cost_d
                     # st.write(f"Year: {year}")
                     # st.write("θ (theta):", theta)
                     # st.write("q (production):", q)
-                    st.write("delta:", delta)
-                    st.write("avg_balance :", avg_balance)
+                    # st.write("delta:", delta)
+                    # st.write("avg_balance :", avg_balance)
                     # st.write("unused N:", unused)
 
             # Add additional values for subsidy output
@@ -170,7 +170,7 @@ def alt_line_chart(data, y_col, y_title):
 col1, col2 = st.columns(2)
 
 with col1:
-    st.subheader("Trading Model")
+    st.subheader("Market-based System")
     PN_t, theta_t, trade_t, q_t = run_model(
         mod_file=mod_trading,
         years=len(available_years),
@@ -199,7 +199,7 @@ with col1:
     st.line_chart(pd.DataFrame({"Avg Production per Farm": q_t}, index=available_years))
 
 with col2:
-    st.subheader(" Subsidy/Penalty Model")
+    st.subheader("Government-regulated system")
     PN_s, theta_s, trade_s, q_s  = run_model(
         mod_file=mod_subsidy,
         years = len(available_years),

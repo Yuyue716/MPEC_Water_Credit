@@ -101,6 +101,17 @@ def run_model(mod_file, model_type, years, k, min_prod, max_prod,tighten, cost_d
 
 st.title("Water Credit Market Simulator")
 
+# Intro paragraph
+st.markdown(
+    """
+    This tool allows you to simulate and explore how farm production, emissions,
+    and environmental credit trading interact under various policy settings.
+    Adjust the sliders below to configure farm characteristics, emission factors,
+    market conditions, and policy constraints. The calculator will help you understand
+    how different decisions and regulations impact emissions, costs, and credit trading.
+    """
+)
+
 # Sliders for user input
 st.subheader("Production Constraints")
 min_prod = st.slider("Minimum production (cows/ha)", 1, 10, 1,help="This represents the minimum requirement amount of cows per hectare. It prevents people from only selling water credit without producing.")
@@ -116,12 +127,13 @@ tighten = st.slider("Cap tightening rate per year (%)", 0, 20, 5,help="This defi
 st.subheader("Abatement cost")
 k = st.slider("Abatement cost (€/percent of emission reduction/year)", 1.0, 20.0, 10.0,help="This represents the cost of reducing emissions through adapting sustainable farming practices. The abatement cost grows quadratically, which means that the more you reduce your emission with sustainable farming practice, the more expensive it gets.")
 
-num_farms = 10 
 
-size_mean = st.slider("Average farm size (hectares)", 5, 100, 15)
-size_sd = st.slider("Size variability (std dev)", 0, 20, 5)
+st.subheader("Farm size and quantity")
+size_mean = st.slider("Average farm size (ha)", 5, 100, 15)
+size_sd = st.slider("Size variation (ha)", 0, 20, 5)
+num_farms = st.slider("Number of farms", 5, 20, 10)
 credit_price = st.slider("Credit price (only for goverment controled system)", min_value=1.0, max_value=10.0, value=7.0, step=1.0)
-
+# num_farms = 10 
 # Load historical R and C data
 cost_df = pd.read_csv("total_cost_revenue_data.csv")
 farm_ids = [f"F{i+1}" for i in range(num_farms)]

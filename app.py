@@ -213,12 +213,8 @@ with col2:
         model_type = "subsidy", 
         farm_ids=farm_ids
     )
-    row1_col1, row1_col2 = st.columns([0.93, 0.07])
-    with row1_col1:
-        st.subheader("Watercredit Price")
-    with row1_col2:
-        st.help("This represents the watercredit price determined by the model based on the supply and demand balance.")
-
+    st.subheader("Watercedit Price")
+    st.markdown(" *This represents the watercredit price determined by the model based on the supply and demand balance.*")
     chart6 = alt_line_chart(PN_s, "PN", "euros(€)")
     st.altair_chart(chart6, use_container_width=True)
 

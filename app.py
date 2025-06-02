@@ -227,8 +227,8 @@ with col2:
     )
 
     st.altair_chart(chart, use_container_width=True)
-    st.subheader("Average Emission Reduction (kg N/cow/year)")
-    chart2 = alt_line_chart(theta_s, "θ", "Average Emission Reduction (kg N/cow/year)")
+    st.subheader("Average Emission Reduction")
+    chart2 = alt_line_chart(theta_s, "θ", "kg N/cow/year")
     st.altair_chart(chart2, use_container_width=True)
 
     st.subheader("Average Water Credit Trade per Farm")

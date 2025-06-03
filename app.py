@@ -41,13 +41,6 @@ def run_model(mod_file, model_type, years, k, min_prod, max_prod,tighten, cost_d
             trade_series.append(total_trade / len(farm_ids))
             q_series.append(avg_q)
             
-            result_df = pd.DataFrame({
-                "Year": available_years[:years],
-                "PN": PN_series,
-                "theta": theta_series,
-                "trade": trade_series,
-                "q": q_series,
-            })
             # # Extract all farm IDs from the tuple keys of x
             # farms = sorted(set(f for pair in x.keys() for f in pair))
 
@@ -93,12 +86,12 @@ def run_model(mod_file, model_type, years, k, min_prod, max_prod,tighten, cost_d
                     # st.write("avg_balance :", avg_balance)
                     # st.write("unused N:", unused)
 
-                    result_df = pd.DataFrame({
-                        "Year": available_years[:years],
-                        "PN": PN_series,
-                        "theta": theta_series,
-                        "trade": trade_series,
-                        "q": q_series,
+    result_df = pd.DataFrame({
+        "Year": available_years[:years],
+        "PN": PN_series,
+        "theta": theta_series,
+        "trade": trade_series,
+        "q": q_series,
                     })
    
     return PN_series, theta_series, trade_series, q_series, dat_files, result_df

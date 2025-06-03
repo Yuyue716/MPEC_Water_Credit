@@ -8,8 +8,11 @@ import os
 import altair as alt
 import pandas as pd
 from amplpy import AMPL, modules
+
 os.environ["AMPL_LICENSE"] = st.secrets["AMPL_LICENSE"]
 modules.activate(os.environ["AMPL_LICENSE"])
+
+# function to run the optimization model
 def run_model(mod_file, model_type, years, k, min_prod, max_prod,tighten, cost_df, Cap_base, E_base, Size, credit_price, farm_ids):
     ampl = AMPL()
     PN_series, theta_series, trade_series, q_series = [], [], [], []
@@ -43,30 +46,6 @@ def run_model(mod_file, model_type, years, k, min_prod, max_prod,tighten, cost_d
             trade_series.append(total_trade / len(farm_ids))
             q_series.append(avg_q)
             
-            # # Extract all farm IDs from the tuple keys of x
-            # farms = sorted(set(f for pair in x.keys() for f in pair))
-
-            # # Initialize a DataFrame with zeros
-            # trade_matrix = pd.DataFrame(0.0, index=farms, columns=farms)
-
-            # # Fill in the trades
-            # for (seller, buyer), value in x.items():
-            #     trade_matrix.loc[seller, buyer] = value
-
-            # # Display in Streamlit
-            # st.subheader("Trade Matrix (Farm-to-Farm)")
-            # st.dataframe(trade_matrix.style.format("{:.2f}"))
-
-            # st.write(f"Year: {year}")
-            # st.write(f"Cap: {Cap}")   
-            # st.write(f"Revenue: {R}")   
-            # st.write(f"Cost: {C}") 
-            # st.write(f"x: {x}") 
-            # st.write(f"trade_series: {trade_series}") 
-            # st.write("θ (theta):", theta)
-            # st.write("q (production):", q)
-            # st.write("PN:", PN)
-
         elif model_type == "subsidy":
                     delta = ampl.get_variable("delta").get_values().to_dict()
                     
@@ -79,14 +58,8 @@ def run_model(mod_file, model_type, years, k, min_prod, max_prod,tighten, cost_d
                     avg_q = np.mean(list(q.values())) if q else 0
                     PN_series.append(u)
                     theta_series.append(avg_theta)
-                    trade_series.append(avg_balance)  # Interpreted like "net credit position"
+                    trade_series.append(avg_balance) 
                     q_series.append(avg_q)
-                    # st.write(f"Year: {year}")
-                    # st.write("θ (theta):", theta)
-                    # st.write("q (production):", q)
-                    # st.write("delta:", delta)
-                    # st.write("avg_balance :", avg_balance)
-                    # st.write("unused N:", unused)
 
     result_df = pd.DataFrame({
         "Year": available_years[:years],
@@ -97,17 +70,6 @@ def run_model(mod_file, model_type, years, k, min_prod, max_prod,tighten, cost_d
                     })
    
     return PN_series, theta_series, trade_series, q_series, dat_files, result_df
-    
-        # avg_theta = np.mean([v for _, v in theta]) if theta else 0
-        # total_trade = sum(x.values()) if x else 0
-        # avg_q = np.mean(list(q.values())) if q else 0
-
-        # PN_series.append(PN)
-        # theta_series.append(avg_theta)
-        # trade_series.append(total_trade / len(farm_ids))
-        # q_series.append(avg_q)
-
-    # return PN_series, theta_series, trade_series, q_series
 
 
 st.title("Water Credit Market Simulator")
@@ -118,7 +80,7 @@ This is a simulator that evaluate the financial and enviromental benefit of wate
 
 This tool simulates two types of water credit systems for cattle farms: a market-based system and a government-regulated system. In **the market-based system**, farms can trade water credits freely. The water credit price is determined by market equilibrium. In **the government-regulated system**, the credit price is fixed by policymakers.
 
-The model supports simulations with **5 to 20 farms**, each with different emission levels and farm sizes. It calculates the **optimal production levels** and **emission reductions** for each farm over a 5-year period. For the market-based system, it also shows the **equilibrium water credit price** and the **amount of credit traded**. For the government-controlled system, it reports **how much credit each farm buys or sells** to meet nitrogen cap requirements.
+The model supports simulations with **10 to 50 farms**, each with different emission levels and farm sizes. It calculates the **optimal production levels** and **emission reductions** for each farm over a 5-year period. For the market-based system, it also shows the **equilibrium water credit price** and the **amount of credit traded**. For the government-controlled system, it reports **how much credit each farm buys or sells** to meet nitrogen cap requirements.
 
 Use the slider bar below to define farm characteristics and policy parameters to start the simulation!
 """)
@@ -137,18 +99,18 @@ st.subheader("Nitrogen emissions cap")
 cap_per_hectare = st.slider("Emission cap per hectare (kg N/ha)", 50, 400, 250, help="This represents the maximum amount of nitrogen emission allowed per hectare. If a farm's emissions exceed this cap, it must purchase water credits. If emissions are below the cap, the farm can sell excess credits.")
 tighten = st.slider("Emission cap tightening rate per year (%)", 0, 20, 5,help="This defines how much the nitrogen emission cap decreases each year. Set a higher value to simulate stricter environmental policies over time. Set to 0 for a constant cap.") / 100
 st.subheader("Abatement cost")
-k = st.slider("Abatement cost (€/squared percent of emission reduction/year)", 1.0, 20.0, 10.0,help="This represents the cost of reducing emissions through adapting sustainable farming practices. The abatement cost grows quadratically, which means that the more you reduce your emission with sustainable farming practice, the more expensive it gets.")
+k = st.slider("Abatement cost (€/squared percent of emission reduction/ha/year)", 0.1, 20.0, 1.0,help="This represents the cost of reducing emissions through adapting sustainable farming practices. The abatement cost grows quadratically, which means that the more you reduce your emission with sustainable farming practice, the more expensive it gets.")
 
 
 st.subheader("Farm size and quantity")
 size_mean = st.slider("Average farm size (ha)", 5, 100, 15, help="This represents the average farm size across all simulated farms in hectares")
 size_sd = st.slider("Size variation (ha)", 0, 20, 5, help="This represents the standard deviation of farm size across all simulated farms in hectares")
-num_farms = st.slider("Number of farms", 10, 100, 10, help="Choose how many farms will be included in the simulation" )
+num_farms = st.slider("Number of farms", 10, 50, 10, help="Choose how many farms will be included in the simulation" )
 
 st.subheader("Watercredit price(only for goverment-regulated system)")
 credit_price = st.slider("Watercredit price (€)", min_value=1.0, max_value=10.0, value=7.0, step=1.0, help="This represent the fixed watercredit price in the goverment-regulated system")
-# num_farms = 10 
-# Load historical R and C data
+
+# Generate model data base on user input and cost revenue prediction result 
 cost_df = pd.read_csv("total_cost_revenue_data.csv")
 farm_ids = [f"F{i+1}" for i in range(num_farms)]
 Size = {f: max(1, int(np.random.normal(size_mean, size_sd))) for f in farm_ids}
@@ -160,7 +122,6 @@ trade_series = []
 q_series = []
 available_years = sorted(cost_df["Year"].unique())
 
-# Model files
 mod_trading = "kkt_equilibrium_model.mod"
 mod_subsidy = "no_trading_kkt_equilibrium_model.mod"
 
@@ -263,7 +224,6 @@ all_dat_files = []
 all_dat_files.extend(dat_files_t)
 all_dat_files.extend(dat_files_s)
 
-
 zip_buffer = BytesIO()
 with zipfile.ZipFile(zip_buffer, "w") as zipf:
     for file in all_dat_files:
@@ -273,7 +233,6 @@ for file in all_dat_files:
     if os.path.exists(file):
         os.remove(file)
 
-# Export simulation results as CSV
 result_df_t["System"] = "Market"
 result_df_s["System"] = "Subsidy"
 combined_df = pd.concat([result_df_t, result_df_s], ignore_index=True)
@@ -282,7 +241,6 @@ csv_buffer = BytesIO()
 combined_df.to_csv(csv_buffer, index=False)
 csv_buffer.seek(0)
 
-# Download buttons
 st.subheader("Download Simulation Results")
 st.download_button(
     label="Download Raw Data Files",

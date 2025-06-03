@@ -4,7 +4,6 @@ def write_dat_file(k, min_prod, max_prod, R, C, Cap, E, Size,credit_price, filen
         f.write("set I := " + " ".join(farm_ids) + ";\n\n")
         if model_type == "trading":
             f.write("set J := " + " ".join(farm_ids) + ";\n\n")
-        # Scalars
         f.write(f"param k := {k};\n")
         f.write(f"param min_prod_factor := {min_prod};\n")
         f.write(f"param max_prod_factor := {max_prod};\n")

@@ -13,7 +13,7 @@ os.environ["AMPL_LICENSE"] = st.secrets["AMPL_LICENSE"]
 modules.activate(os.environ["AMPL_LICENSE"])
 
 # function to run the optimization model
-def run_model(mod_file, model_type, years, k, min_prod, max_prod,tighten, cost_df, Cap_base, E_base, Size, credit_price, farm_ids):
+def run_model(mod_file, model_type, years, k, min_prod, max_prod,tighten, cost_df, Cap_base, E_base, Size, credit_price_base, price_increase, farm_ids):
     ampl = AMPL()
     PN_series, theta_series, trade_series, q_series = [], [], [], []
     available_years = sorted(cost_df["Year"].unique())
@@ -22,6 +22,7 @@ def run_model(mod_file, model_type, years, k, min_prod, max_prod,tighten, cost_d
         R_scalar = cost_df[cost_df["Year"] == year]["Total_Revenue_per_day (€)"].iloc[0] * 365
         C_scalar = cost_df[cost_df["Year"] == year]["Operational_Cost_per_day (€)"].iloc[0] * 365
         Cap = {f: Cap_base[f] * ((1 - tighten) ** t) for f in farm_ids}
+        credit_price = credit_price_base * ((1 - price_increase) ** t)
         E = {f: E_base[f] for f in farm_ids}
         dat_path = f"data_{mod_file}_{model_type}_{year}.dat"
         write_dat_file(k, min_prod, max_prod, R_scalar, C_scalar, Cap, E, Size, credit_price, dat_path, model_type)
@@ -108,7 +109,8 @@ size_sd = st.slider("Size variation (ha)", 0, 20, 5, help="This represents the s
 num_farms = st.slider("Number of farms", 10, 50, 10, help="Choose how many farms will be included in the simulation" )
 
 st.subheader("Watercredit price(only for goverment-regulated system)")
-credit_price = st.slider("Watercredit price (€)", min_value=1.0, max_value=10.0, value=7.0, step=1.0, help="This represent the fixed watercredit price in the goverment-regulated system")
+credit_price_base = st.slider("Watercredit price (€)", min_value=1.0, max_value=10.0, value=7.0, step=1.0, help="This represent the fixed watercredit price in the goverment-regulated system")
+price_increase = st.slider("Watercredit price increase rate per year(€)", min_value=0.0, max_value=20.0, value=5.0, step=1.0, help="This defines how much the watercredit price increase each year in the goverment-regulated system")/ 100
 
 # Generate model data base on user input and cost revenue prediction result 
 cost_df = pd.read_csv("total_cost_revenue_data.csv")
@@ -150,9 +152,10 @@ with col1:
         Cap_base = Cap_base, 
         Size=Size,
         k=k,
-        credit_price= credit_price,
+        credit_price_base= credit_price_base,
         min_prod=min_prod,
         max_prod=max_prod,
+        price_increase = price_increase,
         model_type = "trading", 
         farm_ids=farm_ids
     )
@@ -191,7 +194,8 @@ with col3:
         Cap_base = Cap_base, 
         Size=Size,
         k=k,
-        credit_price= credit_price,
+        credit_price_base= credit_price_base,
+        price_increase = price_increase,
         min_prod=min_prod,
         max_prod=max_prod,
         model_type = "subsidy", 

@@ -84,12 +84,25 @@ def run_model(mod_file, model_type, years, k, min_prod, max_prod,tighten, cost_d
                     # st.write("delta:", delta)
                     # st.write("avg_balance :", avg_balance)
                     # st.write("unused N:", unused)
+    dat_files = []  # <-- store paths to each .dat file
 
-            # Add additional values for subsidy output
-    if model_type == "subsidy":
-                return PN_series, theta_series, trade_series, q_series
-    else:
-                return PN_series, theta_series, trade_series, q_series
+    for t, year in enumerate(available_years[:years]):
+        ...
+        dat_path = f"data_{mod_file}_{model_type}_{year}.dat"
+        write_dat_file(..., dat_path, ...)
+        dat_files.append(dat_path)  # <-- collect file path
+        ...
+
+    result_df = pd.DataFrame({
+        "Year": available_years[:years],
+        "PN": PN_series,
+        "theta": theta_series,
+        "trade": trade_series,
+        "q": q_series,
+    })
+   
+    return PN_series, theta_series, trade_series, q_series, dat_files, result_df
+    
         # avg_theta = np.mean([v for _, v in theta]) if theta else 0
         # total_trade = sum(x.values()) if x else 0
         # avg_q = np.mean(list(q.values())) if q else 0
@@ -172,7 +185,7 @@ col1, col2, col3 = st.columns([3, 1, 3])
 with col1:
     st.subheader("Market-based System")
     st.markdown(" *In the market-based system, farms can trade water credits freely. The water credit price is determined by market equilibrium.*")
-    PN_t, theta_t, trade_t, q_t = run_model(
+    PN_t, theta_t, trade_t, q_t, dat_files_t,  result_df_t = run_model(
         mod_file=mod_trading,
         years=len(available_years),
         E_base=E_base,
@@ -203,7 +216,7 @@ with col1:
     st.altair_chart(chart3, use_container_width=True)
 
     st.markdown("### Average number of cows per Farm")
-    st.markdown(" *This chart shows the average number of the optimize amount of cows per farm*")
+    st.markdown(" *This chart shows the average number of the optimal amount of cows per farm*")
     chart4 = alt_line_chart(q_t, "q", "number  of  cows")
     st.altair_chart(chart4, use_container_width=True)
 with col2:
@@ -213,7 +226,7 @@ with col2:
 with col3:
     st.subheader("Government-regulated system")
     st.markdown(" *In the government-regulated system, the credit price is fixed by policymakers.*")
-    PN_s, theta_s, trade_s, q_s  = run_model(
+    PN_s, theta_s, trade_s, q_s,dat_files_s, result_df_s = run_model(
         mod_file=mod_subsidy,
         years = len(available_years),
         E_base=E_base,
@@ -243,7 +256,48 @@ with col3:
     chart7 = alt_line_chart(trade_s, "x", "number  of  Watercredits")
     st.altair_chart(chart7, use_container_width=True)
 
-    st.markdown("### Average Production per Farm")
-    st.markdown(" *This chart shows the average number of the optimize amount of cows per farm*")
+    st.markdown("### Average number of cows per Farm")
+    st.markdown(" *This chart shows the average number of the optimal amount of cows per farm*")
     chart8 = alt_line_chart(q_s, "q", "number  of  cows")
     st.altair_chart(chart8, use_container_width=True)
+# Combine all .dat files from both models
+all_dat_files = []
+
+# Append from trading and subsidy models
+all_dat_files.extend(dat_files_t)
+all_dat_files.extend(dat_files_s)
+
+# Zip the files
+import zipfile
+from io import BytesIO
+
+zip_buffer = BytesIO()
+with zipfile.ZipFile(zip_buffer, "w") as zipf:
+    for file in all_dat_files:
+        zipf.write(file, arcname=os.path.basename(file))
+zip_buffer.seek(0)
+
+# Export simulation results as CSV
+result_df_t["System"] = "Market"
+result_df_s["System"] = "Subsidy"
+combined_df = pd.concat([result_df_t, result_df_s], ignore_index=True)
+
+csv_buffer = BytesIO()
+combined_df.to_csv(csv_buffer, index=False)
+csv_buffer.seek(0)
+
+# Download buttons
+st.subheader("Download Simulation Results")
+st.download_button(
+    label="📦 Download .dat files (.zip)",
+    data=zip_buffer,
+    file_name="simulation_dat_files.zip",
+    mime="application/zip"
+)
+
+st.download_button(
+    label="📄 Download Simulation Summary (.csv)",
+    data=csv_buffer,
+    file_name="simulation_summary.csv",
+    mime="text/csv"
+)

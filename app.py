@@ -170,7 +170,7 @@ with col1:
     st.altair_chart(chart2, use_container_width=True)
 
     st.markdown("### Average Water Credit Trade per Farm")
-    st.markdown(" *This chart shows the average number of credits traded (bought or sold) per participating farm, per year.*")
+    st.markdown(" *This chart shows the average number of credits traded per simulated farm, per year.*")
     chart3 = alt_line_chart(trade_t, "x", "number  of  watercredit")
     st.altair_chart(chart3, use_container_width=True)
 
@@ -212,7 +212,7 @@ with col3:
     st.altair_chart(chart6, use_container_width=True)
 
     st.markdown("### Average Watercredit bought/sold")
-    st.markdown(" *This chart shows the average watercredit bought or sold across all simulated farms to meet the nitrogen emission requirement.*")
+    st.markdown(" *This chart shows the average watercredit bought or sold across all simulated farms.*")
     chart7 = alt_line_chart(trade_s, "x", "number  of  Watercredits")
     st.altair_chart(chart7, use_container_width=True)
 

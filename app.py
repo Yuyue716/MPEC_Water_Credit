@@ -12,7 +12,7 @@ def run_model(mod_file, model_type, years, k, min_prod, max_prod,tighten, cost_d
     ampl = AMPL()
     PN_series, theta_series, trade_series, q_series = [], [], [], []
     available_years = sorted(cost_df["Year"].unique())
-    
+    dat_files = [] 
     for t, year in enumerate(available_years[:years]):
         R_scalar = cost_df[cost_df["Year"] == year]["Total_Revenue_per_day (€)"].iloc[0] * 365
         C_scalar = cost_df[cost_df["Year"] == year]["Operational_Cost_per_day (€)"].iloc[0] * 365
@@ -20,6 +20,7 @@ def run_model(mod_file, model_type, years, k, min_prod, max_prod,tighten, cost_d
         E = {f: E_base[f] for f in farm_ids}
         dat_path = f"data_{mod_file}_{model_type}_{year}.dat"
         write_dat_file(k, min_prod, max_prod, R_scalar, C_scalar, Cap, E, Size, credit_price, dat_path, model_type)
+        dat_files.append(dat_path) 
         ampl.reset()
         ampl.read(mod_file)
         ampl.read_data(dat_path)
@@ -40,15 +41,22 @@ def run_model(mod_file, model_type, years, k, min_prod, max_prod,tighten, cost_d
             trade_series.append(total_trade / len(farm_ids))
             q_series.append(avg_q)
             
-            # Extract all farm IDs from the tuple keys of x
-            farms = sorted(set(f for pair in x.keys() for f in pair))
+            result_df = pd.DataFrame({
+                "Year": available_years[:years],
+                "PN": PN_series,
+                "theta": theta_series,
+                "trade": trade_series,
+                "q": q_series,
+            })
+            # # Extract all farm IDs from the tuple keys of x
+            # farms = sorted(set(f for pair in x.keys() for f in pair))
 
-            # Initialize a DataFrame with zeros
-            trade_matrix = pd.DataFrame(0.0, index=farms, columns=farms)
+            # # Initialize a DataFrame with zeros
+            # trade_matrix = pd.DataFrame(0.0, index=farms, columns=farms)
 
-            # Fill in the trades
-            for (seller, buyer), value in x.items():
-                trade_matrix.loc[seller, buyer] = value
+            # # Fill in the trades
+            # for (seller, buyer), value in x.items():
+            #     trade_matrix.loc[seller, buyer] = value
 
             # # Display in Streamlit
             # st.subheader("Trade Matrix (Farm-to-Farm)")
@@ -84,22 +92,14 @@ def run_model(mod_file, model_type, years, k, min_prod, max_prod,tighten, cost_d
                     # st.write("delta:", delta)
                     # st.write("avg_balance :", avg_balance)
                     # st.write("unused N:", unused)
-    dat_files = []  # <-- store paths to each .dat file
 
-    for t, year in enumerate(available_years[:years]):
-        ...
-        dat_path = f"data_{mod_file}_{model_type}_{year}.dat"
-        write_dat_file(..., dat_path, ...)
-        dat_files.append(dat_path)  # <-- collect file path
-        ...
-
-    result_df = pd.DataFrame({
-        "Year": available_years[:years],
-        "PN": PN_series,
-        "theta": theta_series,
-        "trade": trade_series,
-        "q": q_series,
-    })
+                    result_df = pd.DataFrame({
+                        "Year": available_years[:years],
+                        "PN": PN_series,
+                        "theta": theta_series,
+                        "trade": trade_series,
+                        "q": q_series,
+                    })
    
     return PN_series, theta_series, trade_series, q_series, dat_files, result_df
     

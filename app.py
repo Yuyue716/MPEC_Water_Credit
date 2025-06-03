@@ -22,7 +22,7 @@ def run_model(mod_file, model_type, years, k, min_prod, max_prod,tighten, cost_d
         R_scalar = cost_df[cost_df["Year"] == year]["Total_Revenue_per_day (€)"].iloc[0] * 365
         C_scalar = cost_df[cost_df["Year"] == year]["Operational_Cost_per_day (€)"].iloc[0] * 365
         Cap = {f: Cap_base[f] * ((1 - tighten) ** t) for f in farm_ids}
-        credit_price = credit_price_base * ((1 - price_increase) ** t)
+        credit_price = credit_price_base * ((1 + price_increase) ** t)
         E = {f: E_base[f] for f in farm_ids}
         dat_path = f"data_{mod_file}_{model_type}_{year}.dat"
         write_dat_file(k, min_prod, max_prod, R_scalar, C_scalar, Cap, E, Size, credit_price, dat_path, model_type)

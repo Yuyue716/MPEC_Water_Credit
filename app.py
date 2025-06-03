@@ -2,6 +2,8 @@ import streamlit as st
 import numpy as np
 import pandas as pd
 from generate_dat import write_dat_file
+import zipfile
+from io import BytesIO
 import os
 import altair as alt
 import pandas as pd
@@ -135,13 +137,13 @@ st.subheader("Nitrogen emissions cap")
 cap_per_hectare = st.slider("Emission cap per hectare (kg N/ha)", 50, 400, 250, help="This represents the maximum amount of nitrogen emission allowed per hectare. If a farm's emissions exceed this cap, it must purchase water credits. If emissions are below the cap, the farm can sell excess credits.")
 tighten = st.slider("Emission cap tightening rate per year (%)", 0, 20, 5,help="This defines how much the nitrogen emission cap decreases each year. Set a higher value to simulate stricter environmental policies over time. Set to 0 for a constant cap.") / 100
 st.subheader("Abatement cost")
-k = st.slider("Abatement cost (€/percent of emission reduction/year)", 1.0, 20.0, 10.0,help="This represents the cost of reducing emissions through adapting sustainable farming practices. The abatement cost grows quadratically, which means that the more you reduce your emission with sustainable farming practice, the more expensive it gets.")
+k = st.slider("Abatement cost (€/squared percent of emission reduction/year)", 1.0, 20.0, 10.0,help="This represents the cost of reducing emissions through adapting sustainable farming practices. The abatement cost grows quadratically, which means that the more you reduce your emission with sustainable farming practice, the more expensive it gets.")
 
 
 st.subheader("Farm size and quantity")
 size_mean = st.slider("Average farm size (ha)", 5, 100, 15, help="This represents the average farm size across all simulated farms in hectares")
 size_sd = st.slider("Size variation (ha)", 0, 20, 5, help="This represents the standard deviation of farm size across all simulated farms in hectares")
-num_farms = st.slider("Number of farms", 5, 20, 10, help="Choose how many farms will be included in the simulation" )
+num_farms = st.slider("Number of farms", 10, 100, 10, help="Choose how many farms will be included in the simulation" )
 
 st.subheader("Watercredit price(only for goverment-regulated system)")
 credit_price = st.slider("Watercredit price (€)", min_value=1.0, max_value=10.0, value=7.0, step=1.0, help="This represent the fixed watercredit price in the goverment-regulated system")
@@ -253,22 +255,23 @@ with col3:
     st.markdown(" *This chart shows the average number of the optimal amount of cows per farm*")
     chart8 = alt_line_chart(q_s, "q", "number  of  cows")
     st.altair_chart(chart8, use_container_width=True)
-# Combine all .dat files from both models
+
+
+# add download button
 all_dat_files = []
 
-# Append from trading and subsidy models
 all_dat_files.extend(dat_files_t)
 all_dat_files.extend(dat_files_s)
 
-# Zip the files
-import zipfile
-from io import BytesIO
 
 zip_buffer = BytesIO()
 with zipfile.ZipFile(zip_buffer, "w") as zipf:
     for file in all_dat_files:
         zipf.write(file, arcname=os.path.basename(file))
 zip_buffer.seek(0)
+for file in all_dat_files:
+    if os.path.exists(file):
+        os.remove(file)
 
 # Export simulation results as CSV
 result_df_t["System"] = "Market"
@@ -282,14 +285,14 @@ csv_buffer.seek(0)
 # Download buttons
 st.subheader("Download Simulation Results")
 st.download_button(
-    label="📦 Download .dat files (.zip)",
+    label="Download Raw Data Files",
     data=zip_buffer,
     file_name="simulation_dat_files.zip",
     mime="application/zip"
 )
 
 st.download_button(
-    label="📄 Download Simulation Summary (.csv)",
+    label="Download Simulation Result Summary ",
     data=csv_buffer,
     file_name="simulation_summary.csv",
     mime="text/csv"

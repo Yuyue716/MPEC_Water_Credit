@@ -99,7 +99,7 @@ st.subheader("Nitrogen emissions cap")
 cap_per_hectare = st.slider("Emission cap per hectare (kg N/ha)", 50, 400, 250, help="This represents the maximum amount of nitrogen emission allowed per hectare. If a farm's emissions exceed this cap, it must purchase water credits. If emissions are below the cap, the farm can sell excess credits.")
 tighten = st.slider("Emission cap tightening rate per year (%)", 0, 20, 5,help="This defines how much the nitrogen emission cap decreases each year. Set a higher value to simulate stricter environmental policies over time. Set to 0 for a constant cap.") / 100
 st.subheader("Abatement cost")
-k = st.slider("Abatement cost (€/squared percent of emission reduction/ha/year)", 0.1, 20.0, 1.0,help="This represents the cost of reducing emissions through adapting sustainable farming practices. The abatement cost grows quadratically, which means that the more you reduce your emission with sustainable farming practice, the more expensive it gets.")
+k = st.slider("Abatement cost (€/squared percent of emission reduction/cow/year)", 0.1, 1.0, 0.1,help="This represents the cost of reducing emissions through adapting sustainable farming practices. The abatement cost grows quadratically, which means that the more you reduce your emission with sustainable farming practice, the more expensive it gets.")
 
 
 st.subheader("Farm size and quantity")

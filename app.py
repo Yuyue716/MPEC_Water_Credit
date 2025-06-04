@@ -73,15 +73,15 @@ def run_model(mod_file, model_type, years, k, min_prod, max_prod,tighten, cost_d
     return PN_series, theta_series, trade_series, q_series, dat_files, result_df
 
 
-st.title("Water Credit Market Simulator")
+st.title("Watercredit System Simulator")
 
 # Intro paragraph
 st.markdown("""
 This is a simulator that evaluate the financial and enviromental benefit of water credit systems for cattle farms. 
 
-This tool simulates two types of water credit systems for cattle farms: a market-based system and a government-regulated system. In **the market-based system**, farms can trade water credits freely. The water credit price is determined by market equilibrium. In **the government-regulated system**, the credit price is fixed by policymakers.
+This tool simulates two types of Watercredit systems for cattle farms: a market-based system and a government-regulated system. In **the market-based system**, farms can trade Watercredits freely. The Watercredit price is determined by market equilibrium. In **the government-regulated system**, the credit price is fixed by policymakers.
 
-The model supports simulations with **10 to 50 farms**, each with different emission levels and farm sizes. It calculates the **optimal production levels** and **emission reductions** for each farm over a 5-year period. For the market-based system, it also shows the **equilibrium water credit price** and the **amount of credit traded**. For the government-controlled system, it reports **how much credit each farm buys or sells** to meet nitrogen cap requirements.
+The model supports simulations with **10 to 50 farms**, each with different emission levels and farm sizes. It calculates the **optimal production levels** and **emission reductions** for each farm over a 5-year period. For the market-based system, it also shows the **equilibrium Watercredit price** and the **amount of credit traded**. For the government-controlled system, it reports **how much credit each farm buys or sells** to meet nitrogen cap requirements.
 
 Use the slider bar below to define farm characteristics and policy parameters to start the simulation!
 """)
@@ -89,7 +89,7 @@ Use the slider bar below to define farm characteristics and policy parameters to
 
 # Sliders for user input
 st.subheader("Production Constraints")
-min_prod = st.slider("Minimum production (cows/ha)", 1, 10, 1,help="This represents the minimum requirement amount of cows per hectare. It prevents people from only selling water credit without producing.")
+min_prod = st.slider("Minimum production (cows/ha)", 1, 10, 1,help="This represents the minimum requirement amount of cows per hectare. It prevents people from only selling Watercredit without producing.")
 max_prod = st.slider("Maximum production factor(cows/ha)", 10, 40, 20,help="This represents the maximum allowed amoutn of cows per hectare. It prevents the model from assigning unreasonably high production values.")
 
 st.subheader("Nitrogen emissions for each farm")
@@ -109,8 +109,8 @@ size_sd = st.slider("Size variation (ha)", 0, 20, 5, help="This represents the s
 num_farms = st.slider("Number of farms", 10, 50, 10, help="Choose how many farms will be included in the simulation" )
 
 st.subheader("Watercredit price(only for goverment-regulated system)")
-credit_price_base = st.slider("Watercredit price (€)", min_value=1.0, max_value=10.0, value=7.0, step=1.0, help="This represent the fixed watercredit price in the goverment-regulated system")
-price_increase = st.slider("Watercredit price increase rate per year(€)", min_value=0.0, max_value=20.0, value=5.0, step=1.0, help="This defines how much the watercredit price increase each year in the goverment-regulated system")/ 100
+credit_price_base = st.slider("Watercredit price (€)", min_value=1.0, max_value=10.0, value=7.0, step=1.0, help="This represent the fixed Watercredit price in the goverment-regulated system")
+price_increase = st.slider("Watercredit price increase rate per year(€)", min_value=0.0, max_value=20.0, value=5.0, step=1.0, help="This defines how much the Watercredit price increase each year in the goverment-regulated system")/ 100
 
 # Generate model data base on user input and cost revenue prediction result 
 cost_df = pd.read_csv("total_cost_revenue_data.csv")
@@ -160,7 +160,7 @@ with col1:
         farm_ids=farm_ids
     )
     st.markdown("### Watercredit Price")
-    st.markdown(" *This chart shows the watercredit price determined by the model based on the supply and demand balance.*")
+    st.markdown(" *This chart shows the Watercredit price determined by the model based on the supply and demand balance.*")
     chart1 = alt_line_chart(PN_t, "PN", "euros(€)")
     st.altair_chart(chart1, use_container_width=True)
 
@@ -171,7 +171,7 @@ with col1:
 
     st.markdown("### Average Water Credit Trade per Farm")
     st.markdown(" *This chart shows the average number of credits traded per simulated farm, per year.*")
-    chart3 = alt_line_chart(trade_t, "x", "number  of  watercredit")
+    chart3 = alt_line_chart(trade_t, "x", "number  of  Watercredit")
     st.altair_chart(chart3, use_container_width=True)
 
     st.markdown("### Average number of cows per Farm")
@@ -202,7 +202,7 @@ with col3:
         farm_ids=farm_ids
     )
     st.markdown("### Watercredit Price ")
-    st.markdown(" *This chart shows the fixing watercredit price determined for the goverment-controled system.*")
+    st.markdown(" *This chart shows the fixing Watercredit price determined for the goverment-controled system.*")
     chart5 = alt_line_chart(PN_s, "PN", "euros(€)")
     st.altair_chart(chart5, use_container_width=True)
 
@@ -212,7 +212,7 @@ with col3:
     st.altair_chart(chart6, use_container_width=True)
 
     st.markdown("### Average Watercredit bought/sold")
-    st.markdown(" *This chart shows the average watercredit bought or sold across all simulated farms.*")
+    st.markdown(" *This chart shows the average Watercredit bought or sold across all simulated farms.*")
     chart7 = alt_line_chart(trade_s, "x", "number  of  Watercredits")
     st.altair_chart(chart7, use_container_width=True)
 
